@@ -2,13 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import useForm from '../hooks/useForm';
 import { submitToWeb3Forms } from '../utils/web3forms';
+import { validatePhone } from '../utils/validation';
 
 const topicOptions = ['Studios', 'Residency', 'Exhibitions', 'Workshops', 'Something else'];
+const phoneRequired = false;
 
 function validateContact(values) {
   const errors = {};
   if (!values.name?.trim()) errors.name = 'Please enter your name.';
   if (!values.email?.trim() || !/\S+@\S+\.\S+/.test(values.email)) errors.email = 'Please enter a valid email.';
+  const phoneError = validatePhone(values.phone, phoneRequired);
+  if (phoneError) errors.phone = phoneError;
   if (!values.message?.trim()) errors.message = 'Please add a short message.';
   return errors;
 }
@@ -18,7 +22,7 @@ export default function ContactSection() {
   const lastSubmitRef = useRef(0);
   const [serverError, setServerError] = useState('');
   const { values, errors, fieldProps, handleSubmit, isSubmitting, submitState, reset, setField, setSubmitState } = useForm({
-    initialValues: { name: '', email: '', topic: 'Studios', message: '', botcheck: false },
+    initialValues: { name: '', email: '', phone: '', topic: 'Studios', message: '', botcheck: false },
     validate: validateContact,
   });
 
@@ -49,6 +53,7 @@ export default function ContactSection() {
         replyto: formValues.email,
         name: formValues.name,
         email: formValues.email,
+        ...(formValues.phone?.trim() ? { phone: formValues.phone.trim() } : {}),
         topic: formValues.topic,
         message: formValues.message,
         botcheck: false,
@@ -87,6 +92,21 @@ export default function ContactSection() {
         <label htmlFor="contact-email">Email</label>
         <input id="contact-email" type="email" {...fieldProps('email')} autoComplete="email" aria-invalid={Boolean(errors.email)} />
         {errors.email && <small id="contact-email-error" className="field-error">{errors.email}</small>}
+      </div>
+
+      <div className="field">
+        <label htmlFor="contact-phone">Phone (optional)</label>
+        <input
+          id="contact-phone"
+          type="tel"
+          inputMode="tel"
+          {...fieldProps('phone')}
+          autoComplete="tel"
+          placeholder="+263 77 123 4567"
+          aria-invalid={Boolean(errors.phone)}
+        />
+        <small className="field-meta">Include your country code, e.g. +263 77 123 4567</small>
+        {errors.phone && <small id="contact-phone-error" className="field-error">{errors.phone}</small>}
       </div>
 
       <div className="field field--full">

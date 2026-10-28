@@ -22,6 +22,13 @@ export default function useForm({ initialValues, validate = () => ({}) }) {
     return Object.keys(nextErrors).length === 0;
   }, [validate, values]);
 
+  const validateSingleField = useCallback((name, nextValue = values[name]) => {
+    const nextValues = { ...values, [name]: nextValue };
+    const nextErrors = validate(nextValues);
+    setErrors((current) => ({ ...current, [name]: nextErrors[name] }));
+    return !nextErrors[name];
+  }, [validate, values]);
+
   const handleSubmit = useCallback(async (submitFn) => {
     const valid = validateFields();
     if (!valid) {
@@ -54,9 +61,10 @@ export default function useForm({ initialValues, validate = () => ({}) }) {
     name,
     value: values[name] ?? '',
     onChange: handleChange,
+    onBlur: (event) => validateSingleField(name, event.target.value),
     'aria-invalid': Boolean(errors[name]),
     'aria-describedby': errors[name] ? `${name}-error` : undefined,
-  }), [errors, handleChange, values]);
+  }), [errors, handleChange, validateSingleField, values]);
 
   return useMemo(() => ({
     values,

@@ -7,7 +7,7 @@ import Team from '../components/Team';
 import Testimonials from '../components/Testimonials';
 import PastResidents from '../components/PastResidents';
 import NewsletterForm from '../components/NewsletterForm';
-import { faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, studioCards, visitInfo, workshopList, exhibitionList } from '../content/site';
+import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, studioCards, visitInfo, workshopList, exhibitionList } from '../content/site';
 import { downloadIcsFile } from '../utils/ics';
 import { getEventStatus } from '../utils/eventStatus';
 
@@ -17,6 +17,34 @@ function formatDate(dateValue) {
     month: 'short',
     year: 'numeric',
   });
+}
+
+function isRealValue(value) {
+  return typeof value === 'string' && value.trim().length > 0 && !value.trim().startsWith('[TODO');
+}
+
+function getSafeContactValue(value, label) {
+  if (!isRealValue(value)) {
+    if (import.meta.env.DEV) {
+      console.warn(`[Village Unhu] Missing ${label}: ${value}`);
+    }
+    return '';
+  }
+
+  return value.trim();
+}
+
+function getTelHref(value) {
+  const safeValue = getSafeContactValue(value, 'phone');
+  if (!safeValue) return '';
+  return safeValue.replace(/[\s().-]/g, '');
+}
+
+function getWhatsAppHref(value) {
+  const safeValue = getSafeContactValue(value, 'whatsapp');
+  if (!safeValue) return '';
+  const digits = safeValue.replace(/\D/g, '');
+  return digits ? `https://wa.me/${digits}` : '';
 }
 
 function GalleryItem({ item, onOpen }) {
@@ -50,6 +78,8 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const galleryRef = useRef(null);
   const triggerRef = useRef(null);
+  const phoneHref = getTelHref(contactInfo.phone);
+  const whatsappHref = getWhatsAppHref(contactInfo.whatsapp);
 
   useEffect(() => {
     if (location.hash === '#contact') {
@@ -365,8 +395,9 @@ export default function HomePage() {
               <p>{visitInfo.address}</p>
             </div>
             <div className="visit-card">
-              <h3>How to get here</h3>
-              <p>{visitInfo.transport}</p>
+              <h3>Phone</h3>
+              {phoneHref ? <p><a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a></p> : null}
+              {whatsappHref ? <p><a href={whatsappHref} target="_blank" rel="noopener noreferrer">Message on WhatsApp</a></p> : null}
             </div>
             <div className="visit-card">
               <h3>Accessibility</h3>
@@ -396,6 +427,10 @@ export default function HomePage() {
             <h2 id="contact-title" className="display">Come say hello.</h2>
             <p className="section__lede">Studio enquiries, residency questions, press or a plain old hello.</p>
           </header>
+          <div className="contact-meta-block">
+            {phoneHref ? <p><a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a></p> : null}
+            {whatsappHref ? <p><a href={whatsappHref} target="_blank" rel="noopener noreferrer">Message on WhatsApp</a></p> : null}
+          </div>
           <ContactSection />
         </section>
       </main>
@@ -408,6 +443,8 @@ export default function HomePage() {
           <address>
             {visitInfo.address}
             <br />
+            {phoneHref ? <a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a> : null}
+            <br />
             <a href={`mailto:${heroContent.note ? 'hello@villageunhu.example' : 'hello@villageunhu.example'}`}>hello@villageunhu.example</a>
           </address>
           <div className="footer-newsletter">
@@ -417,6 +454,7 @@ export default function HomePage() {
             <li><a href="[TODO: instagram url]">Instagram</a></li>
             <li><a href="[TODO: facebook url]">Facebook</a></li>
             <li><a href="[TODO: newsletter url]">Newsletter</a></li>
+            {whatsappHref ? <li><a href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp</a></li> : null}
           </ul>
         </div>
         <p className="site-footer__small">© {new Date().getFullYear()} Village Unhu. All rights reserved.</p>

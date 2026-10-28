@@ -1,15 +1,19 @@
 import React, { useMemo, useRef, useState } from 'react';
 import useForm from '../hooks/useForm';
 import { submitToWeb3Forms } from '../utils/web3forms';
+import { validatePhone } from '../utils/validation';
 
 const disciplineOptions = ['Visual', 'Sound', 'Performance'];
 const intakeOptions = ['[TODO: intake 1]', '[TODO: intake 2]', '[TODO: intake 3]'];
+const phoneRequired = false;
 
 function validateApplication(values) {
   const errors = {};
   if (!values.name?.trim()) errors.name = 'Please add your name.';
   if (!values.email?.trim() || !/\S+@\S+\.\S+/.test(values.email)) errors.email = 'Please enter a valid email address.';
   if (!values.country?.trim()) errors.country = 'Please add your country.';
+  const phoneError = validatePhone(values.phone, phoneRequired);
+  if (phoneError) errors.phone = phoneError;
   if (!values.discipline) errors.discipline = 'Select a discipline.';
   if (!values.intake) errors.intake = 'Choose your preferred intake.';
   if (!values.statement?.trim()) errors.statement = 'Tell us about your practice.';
@@ -27,6 +31,7 @@ async function submitApplication(values) {
     replyto: values.email,
     name: values.name,
     email: values.email,
+    ...(values.phone?.trim() ? { phone: values.phone.trim() } : {}),
     country: values.country,
     discipline: values.discipline,
     intake: values.intake,
@@ -38,11 +43,11 @@ async function submitApplication(values) {
 
 export default function ApplyForm() {
   const lastSubmitRef = useRef(0);
-  const [serverError, setServerError] = useState('');
   const { values, errors, fieldProps, handleSubmit, isSubmitting, submitState, reset, setField, setSubmitState } = useForm({
     initialValues: {
       name: '',
       email: '',
+      phone: '',
       country: '',
       discipline: '',
       intake: '',
@@ -104,6 +109,21 @@ export default function ApplyForm() {
         <label htmlFor="email">Email</label>
         <input id="email" type="email" {...fieldProps('email')} placeholder="you@example.com" />
         {errors.email && <small id="email-error" className="field-error">{errors.email}</small>}
+      </div>
+
+      <div className="field">
+        <label htmlFor="application-phone">Phone (optional)</label>
+        <input
+          id="application-phone"
+          type="tel"
+          inputMode="tel"
+          {...fieldProps('phone')}
+          autoComplete="tel"
+          placeholder="+263 77 123 4567"
+          aria-invalid={Boolean(errors.phone)}
+        />
+        <small className="field-meta">Include your country code, e.g. +263 77 123 4567</small>
+        {errors.phone && <small id="application-phone-error" className="field-error">{errors.phone}</small>}
       </div>
 
       <div className="field">

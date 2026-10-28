@@ -4,6 +4,11 @@ import HomePage from './pages/HomePage';
 import ApplyPage from './pages/ApplyPage';
 import ArtistPage from './pages/ArtistPage';
 import NotFoundPage from './pages/NotFoundPage';
+import { site } from './content/site';
+
+function JsonLd({ data }) {
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+}
 
 function ScrollToHash() {
   const location = useLocation();
@@ -22,8 +27,22 @@ function ScrollToHash() {
 }
 
 export default function App() {
+  const contactPhone = typeof site.contact?.phone === 'string' && !site.contact.phone.trim().startsWith('[TODO')
+    ? site.contact.phone.trim()
+    : '';
+
   return (
     <>
+      {contactPhone && (
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Village Unhu',
+            telephone: contactPhone,
+          }}
+        />
+      )}
       <ScrollToHash />
       <Routes>
         <Route path="/" element={<HomePage />} />

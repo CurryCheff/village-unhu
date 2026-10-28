@@ -207,6 +207,7 @@ export const site = {
   contact: {
     email: '[TODO: real email]',
     phone: '[TODO: phone number]',
+    whatsapp: '[TODO: WhatsApp number, digits only with country code]',
     social: 'Instagram / Facebook / Newsletter',
   },
   socials: [
@@ -280,6 +281,7 @@ export const site = {
     '[TODO: short artist quote]',
     '[TODO: map placeholder]',
     '[TODO: phone number]',
+    '[TODO: WhatsApp number, digits only with country code]',
     '[TODO: instagram url]',
     '[TODO: facebook url]',
     '[TODO: newsletter url]',
@@ -315,5 +317,6 @@ export const testimonialList = site.testimonials;
 export const supportOptions = site.supportOptions;
 export const artistList = site.artists;
 export const longTableInfo = site.longTable;
+export const contactInfo = site.contact;
 
 export default site;
