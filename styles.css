@@ -358,11 +358,20 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 .whatsapp-fab__popover-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .75rem; }
 .whatsapp-popover__list { display: grid; gap: .5rem; }
 .whatsapp-popover__list a { width: 100%; justify-content: flex-start; }
+@media (max-width: 1200px) {
+  .whatsapp-fab__popover { right: .75rem; width: min(20rem, calc(100vw - 1.5rem)); }
+}
+@media (max-width: 900px) {
+  .whatsapp-fab__popover {
+    left: 1rem; right: 1rem; width: auto; max-width: none;
+    bottom: 5.25rem;
+  }
+}
 @media (max-width: 767px) {
   .whatsapp-chooser__list { display: grid; grid-template-columns: 1fr; }
   .whatsapp-chooser__item, .whatsapp-chooser__blank { width: 100%; }
   .whatsapp-fab { right: .75rem; bottom: .75rem; }
-  .whatsapp-fab__popover { right: .75rem; bottom: 5.25rem; width: min(20rem, calc(100vw - 1.5rem)); }
+  .whatsapp-fab__popover { left: .75rem; right: .75rem; bottom: 5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .whatsapp-chooser__item, .whatsapp-chooser__blank, .card__link--secondary, .whatsapp-fab { transition: none; }
