@@ -349,7 +349,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 
 .whatsapp-fab { position: fixed; right: 1rem; bottom: 1rem; z-index: 40; display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border: 0; border-radius: 50%; background: var(--purple); color: var(--bg); box-shadow: 0 1rem 2rem rgba(27, 19, 38, .2); cursor: pointer; }
 .whatsapp-fab svg { width: 1.5rem; height: 1.5rem; }
-.whatsapp-fab__popover { position: fixed; right: 1rem; bottom: 5.4rem; z-index: 41; width: min(22rem, calc(100vw - 2rem)); padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--bg); box-shadow: 0 1rem 2.5rem rgba(27, 19, 38, .2); }
+.whatsapp-fab__popover {
+  position: fixed; right: 1rem; bottom: 5.9rem; z-index: 45;
+  width: min(22rem, calc(100vw - 2rem)); max-height: calc(100vh - 8rem); overflow: auto;
+  padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--bg);
+  box-shadow: 0 1rem 2.5rem rgba(27, 19, 38, .2);
+}
 .whatsapp-fab__popover-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .75rem; }
 .whatsapp-popover__list { display: grid; gap: .5rem; }
 .whatsapp-popover__list a { width: 100%; justify-content: flex-start; }
@@ -357,7 +362,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
   .whatsapp-chooser__list { display: grid; grid-template-columns: 1fr; }
   .whatsapp-chooser__item, .whatsapp-chooser__blank { width: 100%; }
   .whatsapp-fab { right: .75rem; bottom: .75rem; }
-  .whatsapp-fab__popover { right: .75rem; bottom: 5rem; }
+  .whatsapp-fab__popover { right: .75rem; bottom: 5.25rem; width: min(20rem, calc(100vw - 1.5rem)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .whatsapp-chooser__item, .whatsapp-chooser__blank, .card__link--secondary, .whatsapp-fab { transition: none; }
