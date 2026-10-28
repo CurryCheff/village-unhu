@@ -1,0 +1,13 @@
+{
+  "inStudio": [
+    "[TODO: artist name]",
+    "[TODO: artist name]"
+  ],
+  "inKiln": [
+    "[TODO: firing description]"
+  ],
+  "nextWorkshop": {
+    "title": "[TODO: workshop title]",
+    "when": "[TODO: date/time]"
+  }
+}
