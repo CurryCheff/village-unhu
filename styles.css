@@ -314,7 +314,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 .form__status { min-height: 1.5rem; color: var(--purple); font-weight: 700; }
 
 /* Footer: deep purple band with a green top rule. */
-.site-footer { background: var(--purple); color: var(--bg); padding-block: 3.5rem 2rem; border-top: 6px solid var(--green); }
+.site-footer { background: var(--purple); color: var(--bg); padding-block: 3.5rem 2rem; border-top: 6px solid var(--green); padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
 .site-footer__top { display: flex; flex-wrap: wrap; gap: 2rem 4rem; justify-content: space-between; align-items: flex-start; }
 .brand--footer { width: clamp(12rem, 19vw, 15rem); padding: .35rem; background: #fff; border-radius: .2rem; }
 .site-footer address { font-style: normal; }
@@ -322,6 +322,47 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 .site-footer :focus-visible { outline-color: var(--green); box-shadow: none; }
 .social { display: grid; gap: .3rem; }
 .site-footer__small { margin-top: 3rem; font-size: .85rem; opacity: .8; }
+
+.contact-meta-block { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: 1.5rem; }
+
+.whatsapp-chooser {
+  max-width: 46rem;
+  margin: 0 0 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, .7);
+}
+.whatsapp-chooser__header { display: flex; align-items: flex-start; gap: .85rem; margin-bottom: 1rem; }
+.whatsapp-chooser__header h3 { margin: 0 0 .2rem; font-family: var(--font-display); font-size: clamp(1.6rem, 2vw, 2.1rem); }
+.whatsapp-chooser__header p { margin: 0; color: var(--ink-soft); }
+.whatsapp-chooser__icon { display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(55, 212, 90, .12); color: var(--purple); }
+.whatsapp-chooser__icon svg { width: 1.35rem; height: 1.35rem; }
+.whatsapp-chooser__list { display: flex; flex-wrap: wrap; gap: .75rem; }
+.whatsapp-chooser__item, .whatsapp-chooser__blank, .whatsapp-popover__list a, .card__link--secondary {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 2.75rem; padding: .7rem .95rem; border: 1px solid var(--purple); border-radius: 999px; color: var(--purple); background: var(--bg); font-weight: 700; text-decoration: none; transition: transform .2s var(--ease), background .2s var(--ease), color .2s var(--ease);
+}
+.whatsapp-chooser__item:hover, .whatsapp-chooser__blank:hover, .whatsapp-popover__list a:hover, .card__link--secondary:hover { background: var(--purple); color: var(--bg); transform: translateY(-1px); }
+.whatsapp-chooser__blank { margin-top: 1rem; }
+.whatsapp-chooser__item:focus-visible, .whatsapp-chooser__blank:focus-visible, .whatsapp-popover__list a:focus-visible, .card__link--secondary:focus-visible, .whatsapp-fab:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+
+.whatsapp-fab { position: fixed; right: 1rem; bottom: 1rem; z-index: 40; display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border: 0; border-radius: 50%; background: var(--purple); color: var(--bg); box-shadow: 0 1rem 2rem rgba(27, 19, 38, .2); cursor: pointer; }
+.whatsapp-fab svg { width: 1.5rem; height: 1.5rem; }
+.whatsapp-fab__popover { position: fixed; right: 1rem; bottom: 5.4rem; z-index: 41; width: min(22rem, calc(100vw - 2rem)); padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--bg); box-shadow: 0 1rem 2.5rem rgba(27, 19, 38, .2); }
+.whatsapp-fab__popover-header { display: flex; align-items: center; gap: .6rem; margin-bottom: .75rem; }
+.whatsapp-popover__list { display: grid; gap: .5rem; }
+.whatsapp-popover__list a { width: 100%; justify-content: flex-start; }
+@media (max-width: 767px) {
+  .whatsapp-chooser__list { display: grid; grid-template-columns: 1fr; }
+  .whatsapp-chooser__item, .whatsapp-chooser__blank { width: 100%; }
+  .whatsapp-fab { right: .75rem; bottom: .75rem; }
+  .whatsapp-fab__popover { right: .75rem; bottom: 5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-chooser__item, .whatsapp-chooser__blank, .card__link--secondary, .whatsapp-fab { transition: none; }
+  .whatsapp-fab { animation: none; }
+}
 
 .pull-quote-band {
   background: var(--purple);

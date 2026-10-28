@@ -7,9 +7,13 @@ import Team from '../components/Team';
 import Testimonials from '../components/Testimonials';
 import PastResidents from '../components/PastResidents';
 import NewsletterForm from '../components/NewsletterForm';
-import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, studioCards, visitInfo, workshopList, exhibitionList } from '../content/site';
+import WhatsAppChooser from '../components/WhatsAppChooser';
+import WhatsAppFab from '../components/WhatsAppFab';
+import useInView from '../hooks/useInView';
+import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, studioCards, visitInfo, workshopList, exhibitionList, whatsappMessages } from '../content/site';
 import { downloadIcsFile } from '../utils/ics';
 import { getEventStatus } from '../utils/eventStatus';
+import { buildWhatsAppLink } from '../utils/whatsapp';
 
 function formatDate(dateValue) {
   return new Date(dateValue).toLocaleDateString('en-GB', {
@@ -78,8 +82,11 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const galleryRef = useRef(null);
   const triggerRef = useRef(null);
+  const contactSectionRef = useRef(null);
+  const contactVisible = useInView(contactSectionRef, { threshold: 0.35 });
   const phoneHref = getTelHref(contactInfo.phone);
-  const whatsappHref = getWhatsAppHref(contactInfo.whatsapp);
+  const whatsappHref = buildWhatsAppLink(contactInfo.whatsapp);
+  const showWhatsAppFab = Boolean(whatsappHref) && !contactVisible;
 
   useEffect(() => {
     if (location.hash === '#contact') {
@@ -217,16 +224,28 @@ export default function HomePage() {
             <p className="section__lede">Affordable studios for painters, sculptors, printmakers and everyone between. Shared kilns, a wood shop and a long table for lunch.</p>
           </header>
           <ul className="cards cards--3">
-            {studioCards.map((studio, index) => (
-              <li key={studio.id} className={`card ${index === 1 ? 'card--green' : index === 2 ? 'card--purple' : ''}`}>
-                <h3 className="card__title">{studio.title}</h3>
-                <p>{studio.summary}</p>
-                <p className="card__price">{studio.price}</p>
-                <Link className="card__link" to={studio.topic === 'About' ? '/#about' : studio.topic === 'Workshops' ? '/#workshops' : `/?topic=${studio.topic}#contact`}>
-                  {studio.cta} <span aria-hidden="true">→</span>
-                </Link>
-              </li>
-            ))}
+            {studioCards.map((studio, index) => {
+              const studioMessage = whatsappMessages.find((item) => item.id === 'studios')?.message || '';
+              const studioLink = buildWhatsAppLink(contactInfo.whatsapp, studioMessage);
+
+              return (
+                <li key={studio.id} className={`card ${index === 1 ? 'card--green' : index === 2 ? 'card--purple' : ''}`}>
+                  <h3 className="card__title">{studio.title}</h3>
+                  <p>{studio.summary}</p>
+                  <p className="card__price">{studio.price}</p>
+                  <div className="card__links">
+                    <Link className="card__link" to={studio.topic === 'About' ? '/#about' : studio.topic === 'Workshops' ? '/#workshops' : `/?topic=${studio.topic}#contact`}>
+                      {studio.cta} <span aria-hidden="true">→</span>
+                    </Link>
+                    {studioLink && (
+                      <a className="card__link card__link--secondary" href={studioLink} target="_blank" rel="noopener noreferrer" aria-label={`Message us on WhatsApp about ${studio.title}, opens in a new tab`}>
+                        Ask on WhatsApp
+                      </a>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </section>
 
@@ -236,7 +255,20 @@ export default function HomePage() {
               <p className="label">02 — Residency</p>
               <h2 id="residency-title" className="display">{residencyContent.title}</h2>
               <p className="section__lede">{residencyContent.decription}</p>
-              <Link className="btn btn--primary" to="/apply">Explore the residency</Link>
+              <div className="card__links">
+                <Link className="btn btn--primary" to="/apply">Explore the residency</Link>
+                {buildWhatsAppLink(contactInfo.whatsapp, whatsappMessages.find((item) => item.id === 'residency')?.message || '') && (
+                  <a
+                    className="btn btn--ghost btn--small"
+                    href={buildWhatsAppLink(contactInfo.whatsapp, whatsappMessages.find((item) => item.id === 'residency')?.message || '')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Message us on WhatsApp about residency, opens in a new tab"
+                  >
+                    Ask on WhatsApp
+                  </a>
+                )}
+              </div>
             </header>
             <dl className="facts">
               {residencyContent.details.map((detail) => (
@@ -263,6 +295,8 @@ export default function HomePage() {
               const status = getEventStatus(show.date);
               const statusLabel = status === 'opening-soon' ? 'Opening soon' : status === 'past' ? 'Past' : 'Upcoming';
               const tagClass = status === 'opening-soon' ? 'tag tag--green' : 'tag';
+              const eventMessage = `${whatsappMessages.find((item) => item.id === 'exhibitions')?.message || ''} I’m interested in ${show.title}.`;
+              const eventLink = buildWhatsAppLink(contactInfo.whatsapp, eventMessage);
 
               return (
                 <li key={show.id} className="show">
@@ -280,6 +314,11 @@ export default function HomePage() {
                     >
                       RSVP
                     </button>
+                    {eventLink && (
+                      <a className="btn btn--ghost btn--small" href={eventLink} target="_blank" rel="noopener noreferrer" aria-label={`Message us on WhatsApp about ${show.title}, opens in a new tab`}>
+                        Ask on WhatsApp
+                      </a>
+                    )}
                     <button
                       className="btn btn--ghost btn--small"
                       type="button"
@@ -307,18 +346,28 @@ export default function HomePage() {
             <p className="section__lede">Beginner-friendly sessions led by resident artists. Materials included, mess encouraged.</p>
           </header>
           <ul className="cards cards--4">
-            {workshopList.map((workshop) => (
-              <li key={workshop.id} className="card">
-                <span className="card__meta">{workshop.schedule}</span>
-                <h3 className="card__title">{workshop.title}</h3>
-                <p>{workshop.summary}</p>
-                <p className="card__price">{workshop.price}</p>
-                <div className="event-actions event-actions--stacked">
-                  <Link to="/?topic=Workshops#contact" className="card__link">RSVP <span aria-hidden="true">→</span></Link>
-                  <button className="btn btn--ghost btn--small" type="button" onClick={() => downloadIcsFile({ title: workshop.title, start: workshop.date, end: new Date(new Date(workshop.date).getTime() + 90 * 60 * 1000).toISOString(), description: workshop.summary, location: workshop.location })}>Add to calendar</button>
-                </div>
-              </li>
-            ))}
+            {workshopList.map((workshop) => {
+              const workshopMessage = `${whatsappMessages.find((item) => item.id === 'workshops')?.message || ''} I’m interested in ${workshop.title}.`;
+              const workshopLink = buildWhatsAppLink(contactInfo.whatsapp, workshopMessage);
+
+              return (
+                <li key={workshop.id} className="card">
+                  <span className="card__meta">{workshop.schedule}</span>
+                  <h3 className="card__title">{workshop.title}</h3>
+                  <p>{workshop.summary}</p>
+                  <p className="card__price">{workshop.price}</p>
+                  <div className="event-actions event-actions--stacked">
+                    <Link to="/?topic=Workshops#contact" className="card__link">RSVP <span aria-hidden="true">→</span></Link>
+                    {workshopLink && (
+                      <a className="card__link card__link--secondary" href={workshopLink} target="_blank" rel="noopener noreferrer" aria-label={`Message us on WhatsApp about ${workshop.title}, opens in a new tab`}>
+                        Ask on WhatsApp
+                      </a>
+                    )}
+                    <button className="btn btn--ghost btn--small" type="button" onClick={() => downloadIcsFile({ title: workshop.title, start: workshop.date, end: new Date(new Date(workshop.date).getTime() + 90 * 60 * 1000).toISOString(), description: workshop.summary, location: workshop.location })}>Add to calendar</button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </section>
 
@@ -421,7 +470,7 @@ export default function HomePage() {
           <PastResidents />
         </section>
 
-        <section id="contact" className="section contact" aria-labelledby="contact-title">
+        <section id="contact" ref={contactSectionRef} className="section contact" aria-labelledby="contact-title">
           <header className="section__head">
             <p className="label">07 — Contact</p>
             <h2 id="contact-title" className="display">Come say hello.</h2>
@@ -429,8 +478,8 @@ export default function HomePage() {
           </header>
           <div className="contact-meta-block">
             {phoneHref ? <p><a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a></p> : null}
-            {whatsappHref ? <p><a href={whatsappHref} target="_blank" rel="noopener noreferrer">Message on WhatsApp</a></p> : null}
           </div>
+          {whatsappHref && <WhatsAppChooser number={contactInfo.whatsapp} messages={whatsappMessages} />}
           <ContactSection />
         </section>
       </main>
@@ -459,6 +508,8 @@ export default function HomePage() {
         </div>
         <p className="site-footer__small">© {new Date().getFullYear()} Village Unhu. All rights reserved.</p>
       </footer>
+
+      {showWhatsAppFab && <WhatsAppFab number={contactInfo.whatsapp} messages={whatsappMessages} />}
 
       {activeArt && (
         <div className="art-dialog" role="dialog" aria-modal="true" aria-label={`${activeArt.title} by ${activeArt.artist}`}>

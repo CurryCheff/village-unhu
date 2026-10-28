@@ -43,6 +43,7 @@ async function submitApplication(values) {
 
 export default function ApplyForm() {
   const lastSubmitRef = useRef(0);
+  const [serverError, setServerError] = useState('');
   const { values, errors, fieldProps, handleSubmit, isSubmitting, submitState, reset, setField, setSubmitState } = useForm({
     initialValues: {
       name: '',

@@ -206,10 +206,47 @@ export const site = {
   },
   contact: {
     email: '[TODO: real email]',
-    phone: '[TODO: phone number]',
-    whatsapp: '[TODO: WhatsApp number, digits only with country code]',
+    phone: '+263 77 366 3475',
+    whatsapp: '263773663475',
     social: 'Instagram / Facebook / Newsletter',
   },
+  whatsappMessages: [
+    {
+      id: 'studios',
+      label: 'Studio space',
+      message: 'Hi Village Unhu, I\'m interested in renting a studio. Could you tell me about availability and monthly rates?',
+    },
+    {
+      id: 'residency',
+      label: 'Residency',
+      message: 'Hi Village Unhu, I\'d like to know more about the residency programme, including dates, the stipend and how to apply.',
+    },
+    {
+      id: 'workshops',
+      label: 'Workshops',
+      message: 'Hi Village Unhu, I\'d like to book a place in a workshop. Which sessions have space?',
+    },
+    {
+      id: 'group',
+      label: 'Group or school visit',
+      message: 'Hi Village Unhu, I\'d like to arrange a group session for [number] people. What dates and prices do you offer?',
+    },
+    {
+      id: 'visit',
+      label: 'Visiting',
+      message: 'Hi Village Unhu, I\'d like to visit. What are your opening hours and do I need to book?',
+    },
+    {
+      id: 'exhibitions',
+      label: 'Exhibitions and events',
+      message: 'Hi Village Unhu, I\'d like to know about upcoming exhibitions and how to RSVP.',
+    },
+    {
+      id: 'general',
+      label: 'Just saying hello',
+      message: 'Hi Village Unhu, I found you through your website and wanted to get in touch.',
+    },
+  ],
   socials: [
     { label: 'Instagram', href: '[TODO: instagram url]' },
     { label: 'Facebook', href: '[TODO: facebook url]' },
@@ -318,5 +355,6 @@ export const supportOptions = site.supportOptions;
 export const artistList = site.artists;
 export const longTableInfo = site.longTable;
 export const contactInfo = site.contact;
+export const whatsappMessages = site.whatsappMessages;
 
 export default site;
