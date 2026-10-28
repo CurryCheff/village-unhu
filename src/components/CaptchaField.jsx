@@ -1,5 +1,5 @@
+import React, { useEffect, useRef, useState } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import { useEffect, useRef, useState } from 'react';
 import { WEB3FORMS_HCAPTCHA_SITE_KEY } from '../utils/hcaptcha';
 
 export default function CaptchaField({ value, onChange, error, resetSignal = 0, ariaDescribedBy }) {
