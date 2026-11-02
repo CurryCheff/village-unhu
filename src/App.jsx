@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import ApplyPage from './pages/ApplyPage';
-import ArtistPage from './pages/ArtistPage';
 import NotFoundPage from './pages/NotFoundPage';
+import PageSkeleton from './components/skeleton/PageSkeleton';
 import { site } from './content/site';
+
+const ApplyPage = React.lazy(() => import('./pages/ApplyPage'));
+const ArtistPage = React.lazy(() => import('./pages/ArtistPage'));
 
 function JsonLd({ data }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
@@ -46,8 +48,22 @@ export default function App() {
       <ScrollToHash />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/apply" element={<ApplyPage />} />
-        <Route path="/artists/:slug" element={<ArtistPage />} />
+        <Route
+          path="/apply"
+          element={(
+            <Suspense fallback={<PageSkeleton variant="apply" />}>
+              <ApplyPage />
+            </Suspense>
+          )}
+        />
+        <Route
+          path="/artists/:slug"
+          element={(
+            <Suspense fallback={<PageSkeleton variant="artist" />}>
+              <ArtistPage />
+            </Suspense>
+          )}
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>

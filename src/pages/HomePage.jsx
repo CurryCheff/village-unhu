@@ -10,6 +10,7 @@ import NewsletterForm from '../components/NewsletterForm';
 import WhatsAppChooser from '../components/WhatsAppChooser';
 import WhatsAppFab from '../components/WhatsAppFab';
 import useInView from '../hooks/useInView';
+import ImageWithSkeleton from '../components/skeleton/ImageWithSkeleton';
 import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, studioCards, visitInfo, workshopList, exhibitionList, whatsappMessages } from '../content/site';
 import { downloadIcsFile } from '../utils/ics';
 import { getEventStatus } from '../utils/eventStatus';
@@ -59,7 +60,13 @@ function GalleryItem({ item, onOpen }) {
       <figure>
         <button className="artwork" type="button" onClick={(event) => onOpen(item, event.currentTarget)} aria-label={`Open ${item.title} by ${item.artist}`}>
           {hasImage ? (
-            <img src={item.image} alt={`${item.title} by ${item.artist}`} loading="lazy" />
+            <ImageWithSkeleton
+              src={item.image}
+              alt={`${item.title} by ${item.artist}`}
+              aspectRatio="4 / 5"
+              className="gallery-item-media"
+              imgClassName="gallery-item-media__image"
+            />
           ) : (
             <span className="gallery-placeholder" aria-hidden="true">
               <span>{item.title}</span>
@@ -515,7 +522,13 @@ export default function HomePage() {
         <div className="art-dialog" role="dialog" aria-modal="true" aria-label={`${activeArt.title} by ${activeArt.artist}`}>
           <button className="art-dialog__close" type="button" aria-label="Close artwork viewer" onClick={closeArtwork}>×</button>
           {activeArt.image ? (
-            <img className="art-dialog__image" src={activeArt.image} alt={`${activeArt.title} by ${activeArt.artist}`} />
+            <ImageWithSkeleton
+              src={activeArt.image}
+              alt={`${activeArt.title} by ${activeArt.artist}`}
+              aspectRatio="4 / 5"
+              className="art-dialog__media"
+              imgClassName="art-dialog__image"
+            />
           ) : (
             <div className="gallery-placeholder gallery-placeholder--large" aria-label={`${activeArt.title} placeholder`}>
               <span>{activeArt.title}</span>
