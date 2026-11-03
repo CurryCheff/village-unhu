@@ -52,6 +52,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: 1.65;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 body::before {
@@ -1004,9 +1005,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
   /* Nav collapses to a toggle; menu opens as a panel beneath the header. */
   .nav-toggle { display: inline-flex; }
   .site-nav {
-    position: absolute; left: 0; right: 0; top: 100%;
-    background: var(--bg); border-bottom: 1px solid var(--line);
+    position: absolute; left: 0; right: 0; top: calc(100% + .2rem);
+    background: rgba(251, 246, 236, .97); border-bottom: 1px solid var(--line);
     padding: 1rem var(--gutter) 1.5rem; display: none;
+    box-shadow: 0 1rem 1.5rem -1rem rgba(27, 19, 38, .2);
   }
   .site-nav.is-open { display: block; }
   .site-nav ul { flex-direction: column; align-items: stretch; gap: .2rem; }
@@ -1018,18 +1020,55 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
   .split, .split--about { grid-template-columns: 1fr; }
   .show { grid-template-columns: 1fr; gap: .6rem; }
   .show__date { font-size: 1.5rem; }
-  .hero__title { max-width: none; }
+  .hero {
+    min-height: auto;
+    padding-top: clamp(3rem, 12vw, 5rem);
+    padding-bottom: clamp(3rem, 12vw, 4rem);
+  }
+  .hero__title {
+    max-width: none;
+    font-size: clamp(3.1rem, 15vw, 5.4rem);
+    line-height: .9;
+  }
+  .hero__sub {
+    max-width: 100%;
+    font-size: clamp(1.05rem, 4vw, 1.3rem);
+  }
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero__note {
+    width: 100%;
+    align-items: flex-start;
+  }
   .hero__scroll { display: none; }
   .gallery { grid-auto-columns: minmax(15rem, 72%); }
 }
 
 @media (max-width: 36rem) {
+  .marquee__track {
+    gap: 1.25rem;
+    padding: .55rem 1rem;
+    font-size: .65rem;
+  }
+  .site-header {
+    gap: .75rem;
+    padding: .7rem .9rem;
+  }
+  .brand--wordmark { width: 9rem; }
+  .nav-toggle {
+    padding: .5rem .85rem;
+    font-size: .95rem;
+  }
   .cards--4 { grid-template-columns: 1fr; }
   .form { grid-template-columns: 1fr; }
   .facts div { grid-template-columns: 1fr; gap: .2rem; }
   .btn { width: 100%; }
   .hero__blob--purple { right: 4vw; bottom: 3%; }
-  .brand--wordmark { width: 9.4rem; }
+  .hero__blob--green { width: clamp(10rem, 50vw, 14rem); right: -10vw; top: 1.5rem; }
   .gallery-carousel__controls p { display: none; }
   .gallery-carousel__controls { justify-content: flex-end; }
+  .section, .hero, .site-footer { padding-inline: 1rem; }
+  .hero__actions .btn { width: 100%; }
 }
