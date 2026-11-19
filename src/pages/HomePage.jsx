@@ -480,7 +480,7 @@ export default function HomePage() {
       <footer className="site-footer">
         <div className="site-footer__top">
           <Link className="brand brand--wordmark brand--footer" to="/" aria-label="Village Unhu — home">
-            <img src="/assets/village-unhu-wordmark.png" alt="Village Unhu" width="999" height="230" />
+            <img src="/assets/village-unhu-wordmark.png" alt="Village Unhu" width="999" height="230" loading="lazy" decoding="async" />
           </Link>
           <address>
             {visitInfo.locations.map((location) => (
