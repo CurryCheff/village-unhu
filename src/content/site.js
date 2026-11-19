@@ -3,18 +3,19 @@ export const site = {
     studios: true,
     residency: true,
     exhibitions: true,
-    workshops: false,
-    gallery: false,
+    workshops: true,
+    gallery: true,
     about: true,
     villageMap: false,
-    faq: false,
+    faq: true,
     longTable: true,
     accessibility: false,
     newsletter: true,
     team: false,
     testimonials: false,
     pastResidents: false,
-    thisWeek: false,
+    thisWeek: true,
+    futureProjects: false,
   },
   pendingContent: {
     studioFee: false,
@@ -42,8 +43,35 @@ export const site = {
     eyebrow: 'Contemporary art village',
     title: 'Art that grows from shared ground.',
     subtitle: 'Village Unhu is an artist-led project space in Zimbabwe, registered since 2009.',
-    primaryCta: 'Apply for residency',
+    primaryCta: 'Apply or book',
     secondaryCta: "See what's on",
+  },
+  applyOrBook: {
+    id: 'apply-or-book',
+    titleId: 'apply-or-book-title',
+    title: 'Apply or book',
+    choices: [
+      {
+        id: 'residency',
+        label: 'Residency',
+        topic: 'Residency',
+        message: 'Hi Village Unhu, I would like to ask about applying for a residency.',
+      },
+      {
+        id: 'exhibition-space',
+        label: 'Exhibition space',
+        topic: 'Exhibition space',
+        message: 'Hi Village Unhu, I would like to ask about exhibition space.',
+      },
+      {
+        id: 'book-a-room',
+        label: 'Book a room',
+        topic: 'Book a room',
+        message: 'Hi Village Unhu, I would like to ask about booking a room.',
+      },
+    ],
+    whatsappLabel: 'Ask on WhatsApp',
+    formLabel: 'Use the contact form',
   },
   announcements: [
     'Studio tours at the end of every residency',
@@ -62,6 +90,15 @@ export const site = {
         summary: 'Village Unhu started as a studio space.',
         cta: 'Get in touch',
         topic: 'Studios',
+        whatsappMessageId: 'studios',
+      },
+      {
+        id: 'sewing-crochet',
+        title: 'Sewing and crochet',
+        summary: '',
+        cta: 'Ask about sewing and crochet',
+        topic: 'Workshops',
+        whatsappMessageId: 'workshops',
       },
     ],
   },
@@ -85,20 +122,41 @@ export const site = {
     openingLine: 'Exhibition openings every Thursday.',
     items: [],
   },
-  workshops: [],
+  workshops: {
+    title: 'Sewing and crochet',
+    contactLabel: 'Contact us',
+    whatsappLabel: 'Ask on WhatsApp',
+    items: [
+      {
+        id: 'sewing-crochet',
+        title: 'Sewing and crochet',
+        summary: '',
+        topic: 'Workshops',
+      },
+    ],
+  },
   gallery: {
+    title: 'Gallery',
     categories: ['Paintings', 'Drawings', 'Graphics', 'Multimedia', 'Photographs', 'Sculpture'],
     items: [],
   },
   about: {
     title: 'Unhu: being human, together.',
+    faqLabel: 'Good to know',
+    projectHistoryLabel: 'About the space',
+    exchangesLabel: 'Artist exchanges',
+    artFairsLabel: 'Art fairs',
+    schoolProgrammesLabel: 'School programmes',
     unhu:
       'Unhu is the Shona idea of becoming fully human through others — a village built on generosity, care and making together.',
     facts: [
       'Village Unhu is an artist-led project space in Zimbabwe, registered since 2009.',
       'It started as a studio space.',
     ],
-    founders: { confirmed: false, names: [] },
+    founders: {
+      confirmed: false,
+      names: ['Misheck Masamvu', 'Georgina Maxim'],
+    },
     exchanges: ['UK', 'Glasgow', 'Turkey', 'France', 'South Africa', 'Namibia', 'Mauritius', 'Switzerland'],
     artFairs: [
       { name: 'FNB Joburg Art Fair', since: '2015' },
@@ -110,11 +168,20 @@ export const site = {
     schoolProgrammes:
       'Artists give art lessons and mini art camps in schools, and schools visit the space.',
   },
-  faq: [],
+  faq: [
+    { question: 'How can I apply for the residency?', answer: '' },
+    { question: 'Can I book a room?', answer: '' },
+    { question: 'How can I apply for an exhibition space?', answer: '' },
+  ],
+  futureProjects: { title: 'Future projects', titleId: 'future-projects-title', items: [] },
   locations: [
     { name: 'Harare', address: '1 Rowland Square, Milton Park' },
     { name: 'Mutare', address: '999 Mount Wolseley / Drifters, Mutare Road' },
   ],
+  mutareFeatures: {
+    mountains: { enabled: false, text: '' },
+    coffeeShop: { enabled: false, text: '' },
+  },
   hours: [
     { days: 'Monday', hours: 'By appointment only' },
     { days: 'Tuesday to Friday', hours: '9am to 5pm' },
@@ -136,7 +203,7 @@ export const site = {
       { label: 'Instagram', href: '', confirmed: false },
     ],
   },
-  contactTopics: ['Studios', 'Residency', 'Exhibitions', 'Something else'],
+  contactTopics: ['Studios', 'Residency', 'Exhibitions', 'Exhibition space', 'Book a room', 'Workshops', 'Something else'],
   defaultContactTopic: 'Studios',
   whatsappMessages: [
     {
@@ -148,6 +215,16 @@ export const site = {
       id: 'residency',
       label: 'Residency',
       message: 'Hi Village Unhu, I would like to ask about the residency.',
+    },
+    {
+      id: 'exhibition-space',
+      label: 'Exhibition space',
+      message: 'Hi Village Unhu, I would like to ask about exhibition space.',
+    },
+    {
+      id: 'book-a-room',
+      label: 'Book a room',
+      message: 'Hi Village Unhu, I would like to ask about booking a room.',
     },
     {
       id: 'exhibitions',
@@ -170,7 +247,6 @@ export const site = {
     labels: ['Artwork of the week', 'Artist of the month', 'Artists in residency'],
     items: [],
   },
-  futureProjects: { enabled: false, items: [] },
 };
 
 export const navItems = site.nav;
@@ -178,7 +254,7 @@ export const heroContent = site.hero;
 export const studioCards = site.studios.cards;
 export const residencyContent = site.residency;
 export const exhibitionList = site.exhibitions.items;
-export const workshopList = site.workshops;
+export const workshopList = site.workshops.items;
 export const galleryItems = site.gallery.items;
 export const faqItems = site.faq;
 export const visitInfo = { locations: site.locations, hours: site.hours };

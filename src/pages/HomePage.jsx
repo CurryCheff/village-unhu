@@ -12,7 +12,6 @@ import WhatsAppFab from '../components/WhatsAppFab';
 import useInView from '../hooks/useInView';
 import ImageWithSkeleton from '../components/skeleton/ImageWithSkeleton';
 import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, site, studioCards, visitInfo, workshopList, exhibitionList, whatsappMessages } from '../content/site';
-import { downloadIcsFile } from '../utils/ics';
 import { buildWhatsAppLink } from '../utils/whatsapp';
 
 function formatDate(dateValue) {
@@ -178,10 +177,38 @@ export default function HomePage() {
           <h1 id="hero-title" className="display hero__title">{heroContent.title}</h1>
           <p className="hero__sub">{heroContent.subtitle}</p>
           <div className="hero__actions">
-            <Link className="btn btn--primary" to="/apply">{heroContent.primaryCta}</Link>
+            <a className="btn btn--primary" href={`#${site.applyOrBook.id}`}>{heroContent.primaryCta}</a>
             <a className="btn btn--ghost" href="#exhibitions">{heroContent.secondaryCta}</a>
           </div>
           <a className="hero__scroll" href="#studios"><span>Explore the village</span><span aria-hidden="true">↓</span></a>
+        </section>
+
+        <section id={site.applyOrBook.id} className="section apply-or-book" aria-labelledby={site.applyOrBook.titleId}>
+          <header className="section__head">
+            <h2 id={site.applyOrBook.titleId} className="display">{site.applyOrBook.title}</h2>
+          </header>
+          <ul className="cards cards--3">
+            {site.applyOrBook.choices.map((choice) => {
+              const whatsappHref = buildWhatsAppLink(contactInfo.whatsapp, choice.message);
+              const formHref = `/?topic=${encodeURIComponent(choice.topic)}#contact`;
+
+              return (
+                <li className="card" key={choice.id}>
+                  <h3 className="card__title">{choice.label}</h3>
+                  <div className="card__links">
+                    {whatsappHref && (
+                      <a className="card__link" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                        {site.applyOrBook.whatsappLabel}
+                      </a>
+                    )}
+                    <Link className="card__link card__link--secondary" to={formHref}>
+                      {site.applyOrBook.formLabel}
+                    </Link>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
         <ThisWeek />
@@ -198,13 +225,13 @@ export default function HomePage() {
           </header>
           <ul className="cards cards--3">
             {studioCards.map((studio) => {
-              const studioMessage = whatsappMessages.find((item) => item.id === 'studios')?.message || '';
+              const studioMessage = whatsappMessages.find((item) => item.id === studio.whatsappMessageId)?.message || '';
               const studioLink = buildWhatsAppLink(contactInfo.whatsapp, studioMessage);
 
               return (
                 <li key={studio.id} className="card">
                   <h3 className="card__title">{studio.title}</h3>
-                  <p>{studio.summary}</p>
+                  {studio.summary && <p>{studio.summary}</p>}
                   <div className="card__links">
                     <Link className="card__link" to={`/?topic=${studio.topic}#contact`}>
                       {studio.cta} <span aria-hidden="true">→</span>
@@ -283,28 +310,24 @@ export default function HomePage() {
         {site.features.workshops && <section id="workshops" className="section section--tint" aria-labelledby="workshops-title">
           <header className="section__head">
             <p className="label">04 — Workshops</p>
-            <h2 id="workshops-title" className="display">Make something with your hands.</h2>
-            <p className="section__lede">Beginner-friendly sessions led by resident artists. Materials included, mess encouraged.</p>
+            <h2 id="workshops-title" className="display">{site.workshops.title}</h2>
           </header>
-          <ul className="cards cards--4">
+          <ul className="cards cards--3">
             {workshopList.map((workshop) => {
-              const workshopMessage = `${whatsappMessages.find((item) => item.id === 'workshops')?.message || ''} I’m interested in ${workshop.title}.`;
+              const workshopMessage = whatsappMessages.find((item) => item.id === 'workshops')?.message || '';
               const workshopLink = buildWhatsAppLink(contactInfo.whatsapp, workshopMessage);
 
               return (
                 <li key={workshop.id} className="card">
-                  <span className="card__meta">{workshop.schedule}</span>
                   <h3 className="card__title">{workshop.title}</h3>
-                  <p>{workshop.summary}</p>
-                  <p className="card__price">{workshop.price}</p>
-                  <div className="event-actions event-actions--stacked">
-                    <Link to="/?topic=Workshops#contact" className="card__link">RSVP <span aria-hidden="true">→</span></Link>
+                  {workshop.summary && <p>{workshop.summary}</p>}
+                  <div className="card__links">
+                    <Link to={`/?topic=${encodeURIComponent(workshop.topic)}#contact`} className="card__link">{site.workshops.contactLabel} <span aria-hidden="true">→</span></Link>
                     {workshopLink && (
                       <a className="card__link card__link--secondary" href={workshopLink} target="_blank" rel="noopener noreferrer" aria-label={`Message us on WhatsApp about ${workshop.title}, opens in a new tab`}>
-                        Ask on WhatsApp
+                        {site.workshops.whatsappLabel}
                       </a>
                     )}
-                    <button className="btn btn--ghost btn--small" type="button" onClick={() => downloadIcsFile({ title: workshop.title, start: workshop.date, end: new Date(new Date(workshop.date).getTime() + 90 * 60 * 1000).toISOString(), description: workshop.summary, location: workshop.location })}>Add to calendar</button>
                   </div>
                 </li>
               );
@@ -315,22 +338,27 @@ export default function HomePage() {
         {site.features.gallery && <section id="gallery" className="section" aria-labelledby="gallery-title">
           <header className="section__head">
             <p className="label">05 — Gallery</p>
-            <h2 id="gallery-title" className="display">From the studios, this season.</h2>
+            <h2 id="gallery-title" className="display">{site.gallery.title}</h2>
           </header>
-          <div className="gallery-carousel" aria-label="Artwork carousel">
-            <div className="gallery-carousel__controls">
-              <p>Drag to browse, or use the arrows.</p>
-              <div>
-                <button className="gallery-carousel__button" type="button" onClick={() => scrollGallery(-1)} aria-label="Previous artworks">←</button>
-                <button className="gallery-carousel__button" type="button" onClick={() => scrollGallery(1)} aria-label="Next artworks">→</button>
+          <ul className="gallery-categories" aria-label="Gallery categories">
+            {site.gallery.categories.map((category) => <li key={category}>{category}</li>)}
+          </ul>
+          {galleryItems.length > 0 && (
+            <div className="gallery-carousel" aria-label="Artwork carousel">
+              <div className="gallery-carousel__controls">
+                <p>Drag to browse, or use the arrows.</p>
+                <div>
+                  <button className="gallery-carousel__button" type="button" onClick={() => scrollGallery(-1)} aria-label="Previous artworks">←</button>
+                  <button className="gallery-carousel__button" type="button" onClick={() => scrollGallery(1)} aria-label="Next artworks">→</button>
+                </div>
               </div>
+              <ul ref={galleryRef} className="gallery" onKeyDown={handleGalleryKey} tabIndex={0}>
+                {galleryItems.map((item) => (
+                  <GalleryItem key={item.id} item={item} onOpen={openArtwork} />
+                ))}
+              </ul>
             </div>
-            <ul ref={galleryRef} className="gallery" onKeyDown={handleGalleryKey} tabIndex={0}>
-              {galleryItems.map((item) => (
-                <GalleryItem key={item.id} item={item} onOpen={openArtwork} />
-              ))}
-            </ul>
-          </div>
+          )}
         </section>}
 
         {site.features.about && <section id="about" className="section section--tint" aria-labelledby="about-title">
@@ -341,13 +369,29 @@ export default function HomePage() {
             </header>
             <div className="prose">
               <p>{site.about.unhu}</p>
+              <h3>{site.about.projectHistoryLabel}</h3>
               {site.about.facts.map((fact) => <p key={fact}>{fact}</p>)}
+              {site.about.founders.confirmed && site.about.founders.names.length > 0 && (
+                <p>{site.about.founders.names.join(' and ')}</p>
+              )}
+              <h3>{site.about.exchangesLabel}</h3>
+              <p>Exchanges with artists from {site.about.exchanges.join(', ')}.</p>
+              <h3>{site.about.artFairsLabel}</h3>
+              <ul>
+                {site.about.artFairs.map((fair) => (
+                  <li key={fair.name}>
+                    {fair.name}{fair.since ? ` (since ${fair.since})` : ` (${fair.year})`}
+                  </li>
+                ))}
+              </ul>
+              <h3>{site.about.schoolProgrammesLabel}</h3>
+              <p>{site.about.schoolProgrammes}</p>
             </div>
           </div>
           {site.features.villageMap && <VillageMap />}
-          {site.features.faq && <div className="faq">
-            <p className="label">Good to know</p>
-            {faqItems.map((faq) => (
+          {site.features.faq && faqItems.some((faq) => faq.answer.trim()) && <div className="faq">
+            <p className="label">{site.about.faqLabel}</p>
+            {faqItems.filter((faq) => faq.answer.trim()).map((faq) => (
               <details key={faq.question} className="faq__item">
                 <summary>{faq.question}</summary>
                 <p>{faq.answer}</p>
@@ -355,6 +399,13 @@ export default function HomePage() {
             ))}
           </div>}
         </section>}
+
+        {site.features.futureProjects && site.futureProjects.items.length > 0 && (
+          <section className="section" aria-labelledby={site.futureProjects.titleId}>
+            <h2 id={site.futureProjects.titleId} className="display">{site.futureProjects.title}</h2>
+            <ul>{site.futureProjects.items.map((item) => <li key={item}>{item}</li>)}</ul>
+          </section>
+        )}
 
         {site.features.longTable && <section className="section">
           <div className="long-table-callout">
@@ -379,6 +430,12 @@ export default function HomePage() {
               <div className="visit-card" key={location.name}>
                 <h3>{location.name}</h3>
                 <address>{location.address}</address>
+                {location.name === 'Mutare' && site.mutareFeatures.mountains.enabled && site.mutareFeatures.mountains.text && (
+                  <p>{site.mutareFeatures.mountains.text}</p>
+                )}
+                {location.name === 'Mutare' && site.mutareFeatures.coffeeShop.enabled && site.mutareFeatures.coffeeShop.text && (
+                  <p>{site.mutareFeatures.coffeeShop.text}</p>
+                )}
                 <h4>Opening hours</h4>
                 {visitInfo.hours.map((entry) => (
                   <p key={entry.days}><strong>{entry.days}:</strong> {entry.hours}</p>
