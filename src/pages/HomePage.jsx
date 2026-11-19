@@ -11,7 +11,7 @@ import WhatsAppChooser from '../components/WhatsAppChooser';
 import WhatsAppFab from '../components/WhatsAppFab';
 import useInView from '../hooks/useInView';
 import ImageWithSkeleton from '../components/skeleton/ImageWithSkeleton';
-import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, site, studioCards, visitInfo, workshopList, exhibitionList, whatsappMessages } from '../content/site';
+import { contactInfo, defaultWhatsAppContactId, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, site, studioCards, visitInfo, whatsappContacts, workshopList, exhibitionList, whatsappMessages } from '../content/site';
 import { buildWhatsAppLink } from '../utils/whatsapp';
 
 function formatDate(dateValue) {
@@ -466,7 +466,13 @@ export default function HomePage() {
             {phoneNumbers.map(({ number, href }) => <p key={number}><a href={`tel:${href}`}>{number}</a></p>)}
             <p><a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a></p>
           </div>
-          {whatsappHref && <WhatsAppChooser number={contactInfo.whatsapp} messages={whatsappMessages} />}
+          {whatsappHref && (
+            <WhatsAppChooser
+              contacts={whatsappContacts}
+              defaultContactId={defaultWhatsAppContactId}
+              messages={whatsappMessages}
+            />
+          )}
           <ContactSection />
         </section>
       </main>
@@ -500,7 +506,13 @@ export default function HomePage() {
         <p className="site-footer__small">© {new Date().getFullYear()} Village Unhu. All rights reserved.</p>
       </footer>
 
-      {showWhatsAppFab && <WhatsAppFab number={contactInfo.whatsapp} messages={whatsappMessages} />}
+      {showWhatsAppFab && (
+        <WhatsAppFab
+          contacts={whatsappContacts}
+          defaultContactId={defaultWhatsAppContactId}
+          messages={whatsappMessages}
+        />
+      )}
 
       {activeArt && (
         <div className="art-dialog" role="dialog" aria-modal="true" aria-label={`${activeArt.title} by ${activeArt.artist}`}>

@@ -59,7 +59,7 @@ export default function ContactSection() {
 
   useEffect(() => {
     const topicFromUrl = new URLSearchParams(location.search).get('topic');
-    if (topicFromUrl) {
+    if (topicFromUrl && site.contactTopics.includes(topicFromUrl)) {
       setField('topic', topicFromUrl);
     }
 

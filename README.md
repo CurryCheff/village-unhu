@@ -14,7 +14,9 @@ This project sends form submissions through Web3Forms.
 5. For hCaptcha spam protection, use the Web3Forms-supported site key:
    `50b2fe65-b00b-4b9e-ad62-3ba471098be2`
 
-The contact, residency, and newsletter forms all use the same Web3Forms endpoint and subject prefixes so you can filter replies in your inbox.
+The contact, residency, and newsletter forms submit to the Web3Forms endpoint using the configured access key. Web3Forms routes submissions to the recipient configured for that key. The newsletter form sends an email submission with the subject `New newsletter signup`; it does not connect to a separate mailing-list service.
+
+Vite embeds variables prefixed with `VITE_` in the browser bundle. Keep the access key in the local/Vercel environment configuration and never commit a real key. It is not a server-only secret.
 
 ## Spam protection and hCaptcha
 
@@ -27,6 +29,6 @@ The forms use a layered anti-spam approach:
 - local cooldown and rate-limit checks using `localStorage`
 - stronger validation for disposable email domains and malformed input
 
-This follows the Web3Forms hCaptcha guidance and keeps the site protected without storing secrets in the frontend.
+This follows the Web3Forms hCaptcha guidance. The access key is supplied through environment configuration, but is used by this client-side site.
 
 > Note: the free Web3Forms plan uses the shared site key above; domain restriction is not available on the free tier.

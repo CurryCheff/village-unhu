@@ -9,9 +9,10 @@ function WhatsAppIcon() {
   );
 }
 
-export default function WhatsAppChooser({ number, messages = [] }) {
-  const cleanNumber = typeof number === 'string' ? number.trim() : '';
-  if (!cleanNumber || cleanNumber.startsWith('[TODO')) return null;
+export default function WhatsAppChooser({ contacts = [], defaultContactId, messages = [] }) {
+  const defaultContact = contacts.find((contact) => contact.id === defaultContactId);
+  const defaultContactLink = defaultContact ? buildWhatsAppLink(defaultContact.number) : null;
+  if (!defaultContact || !defaultContactLink) return null;
 
   return (
     <div className="whatsapp-chooser" aria-label="WhatsApp contact options">
@@ -23,28 +24,47 @@ export default function WhatsAppChooser({ number, messages = [] }) {
         </div>
       </div>
 
-      <div className="whatsapp-chooser__list" role="list">
-        {messages.map((item) => {
-          const href = buildWhatsAppLink(cleanNumber, item.message);
-          if (!href) return null;
+      <div className="whatsapp-contacts">
+        {contacts.map((contact) => {
+          const directLink = buildWhatsAppLink(contact.number);
+          const isDefault = contact.id === defaultContactId;
+          if (!directLink) return null;
+
           return (
-            <a
-              key={item.id}
-              className="whatsapp-chooser__item"
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Message us on WhatsApp about ${item.label.toLowerCase()}, opens in a new tab`}
-            >
-              {item.label}
-            </a>
+            <article key={contact.id} className="whatsapp-contact-card">
+              <h4>{contact.name}</h4>
+              <p>{contact.role}</p>
+              <a className="whatsapp-contact-card__number" href={directLink} target="_blank" rel="noopener noreferrer">
+                {contact.number}
+              </a>
+              {isDefault && (
+                <div className="whatsapp-chooser__list" aria-label="Message topics">
+                  {messages.map((item) => {
+                    const href = buildWhatsAppLink(defaultContact.number, item.message);
+                    if (!href) return null;
+                    return (
+                      <a
+                        key={item.id}
+                        className="whatsapp-chooser__item"
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Message us on WhatsApp about ${item.label.toLowerCase()}, opens in a new tab`}
+                      >
+                        {item.label}
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </article>
           );
         })}
       </div>
 
       <a
         className="whatsapp-chooser__blank"
-        href={buildWhatsAppLink(cleanNumber) || '#'}
+        href={defaultContactLink}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Open a blank WhatsApp chat in a new tab"

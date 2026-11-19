@@ -9,14 +9,13 @@ function WhatsAppIcon() {
   );
 }
 
-export default function WhatsAppFab({ number, messages = [] }) {
+export default function WhatsAppFab({ contacts = [], defaultContactId, messages = [] }) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef(null);
   const popoverRef = useRef(null);
   const previousFocusRef = useRef(null);
-
-  const cleanNumber = typeof number === 'string' ? number.trim() : '';
-  if (!cleanNumber || cleanNumber.startsWith('[TODO')) return null;
+  const defaultContact = contacts.find((contact) => contact.id === defaultContactId);
+  const defaultLink = defaultContact ? buildWhatsAppLink(defaultContact.number) : null;
 
   useEffect(() => {
     if (!open) return undefined;
@@ -72,7 +71,7 @@ export default function WhatsAppFab({ number, messages = [] }) {
     };
   }, [open]);
 
-  const openLink = buildWhatsAppLink(cleanNumber) || '#';
+  if (!defaultContact || !defaultLink) return null;
 
   return (
     <>
@@ -92,11 +91,14 @@ export default function WhatsAppFab({ number, messages = [] }) {
         <div id="whatsapp-fab-popover" ref={popoverRef} className="whatsapp-fab__popover" role="dialog" aria-label="Choose a WhatsApp topic">
           <div className="whatsapp-fab__popover-header">
             <span className="whatsapp-chooser__icon" aria-hidden="true"><WhatsAppIcon /></span>
-            <strong>Chat on WhatsApp</strong>
+            <div>
+              <strong>Chat with {defaultContact.name}</strong>
+              <p>{defaultContact.role}</p>
+            </div>
           </div>
           <div className="whatsapp-popover__list">
             {messages.map((item) => {
-              const href = buildWhatsAppLink(cleanNumber, item.message);
+              const href = buildWhatsAppLink(defaultContact.number, item.message);
               if (!href) return null;
               return (
                 <a key={item.id} href={href} target="_blank" rel="noopener noreferrer" aria-label={`Message us on WhatsApp about ${item.label.toLowerCase()}, opens in a new tab`}>
@@ -104,7 +106,7 @@ export default function WhatsAppFab({ number, messages = [] }) {
                 </a>
               );
             })}
-            <a href={openLink} target="_blank" rel="noopener noreferrer">Open a blank chat</a>
+            <a href={defaultLink} target="_blank" rel="noopener noreferrer">Open a blank chat</a>
           </div>
         </div>
       )}

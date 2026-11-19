@@ -1,10 +1,7 @@
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit';
 
 export async function submitToWeb3Forms(payload = {}) {
-  const accessKey =
-    (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_WEB3FORMS_KEY) ||
-    (typeof process !== 'undefined' && process.env && process.env.REACT_APP_WEB3FORMS_KEY) ||
-    '';
+  const accessKey = import.meta.env.VITE_WEB3FORMS_KEY?.trim() || '';
 
   if (!accessKey) {
     if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV) {

@@ -60,7 +60,7 @@ export const site = {
       {
         id: 'exhibition-space',
         label: 'Exhibition space',
-        topic: 'Exhibition space',
+        topic: 'Apply for an exhibition space',
         message: 'Hi Village Unhu, I would like to ask about exhibition space.',
       },
       {
@@ -192,8 +192,17 @@ export const site = {
   contact: {
     email: 'villageunhu@gmail.com',
     phones: ['+263 774 630 656', '+263 772 751 455'],
-    // Temporary WhatsApp default until the owner confirms the contacts.
-    whatsappDefaultNumber: '263772751455',
+    whatsapp: {
+      defaultContactId: 'village-unhu-temporary',
+      contacts: [
+        {
+          id: 'village-unhu-temporary',
+          name: 'Village Unhu',
+          number: '+263 772 751 455',
+          role: 'Temporary WhatsApp contact',
+        },
+      ],
+    },
     socials: [
       {
         label: 'Facebook',
@@ -203,7 +212,7 @@ export const site = {
       { label: 'Instagram', href: '', confirmed: false },
     ],
   },
-  contactTopics: ['Studios', 'Residency', 'Exhibitions', 'Exhibition space', 'Book a room', 'Workshops', 'Something else'],
+  contactTopics: ['Studios', 'Residency', 'Exhibitions', 'Apply for an exhibition space', 'Book a room', 'Workshops', 'Something else'],
   defaultContactTopic: 'Studios',
   whatsappMessages: [
     {
@@ -263,10 +272,15 @@ export const testimonialList = [];
 export const supportOptions = [];
 export const artistList = [];
 export const longTableInfo = site.longTable;
+export const defaultWhatsAppContact = site.contact.whatsapp.contacts.find(
+  (contact) => contact.id === site.contact.whatsapp.defaultContactId,
+);
 export const contactInfo = {
   ...site.contact,
-  whatsapp: site.contact.whatsappDefaultNumber,
+  whatsapp: defaultWhatsAppContact?.number,
 };
 export const whatsappMessages = site.whatsappMessages;
+export const whatsappContacts = site.contact.whatsapp.contacts;
+export const defaultWhatsAppContactId = site.contact.whatsapp.defaultContactId;
 
 export default site;

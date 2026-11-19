@@ -482,6 +482,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 .whatsapp-chooser__header p { margin: 0; color: var(--ink-soft); }
 .whatsapp-chooser__icon { display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(55, 212, 90, .12); color: var(--purple); }
 .whatsapp-chooser__icon svg { width: 1.35rem; height: 1.35rem; }
+.whatsapp-contacts { display: grid; gap: .75rem; }
+.whatsapp-contact-card { min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: calc(var(--radius) * .75); background: var(--bg); }
+.whatsapp-contact-card h4 { margin: 0 0 .2rem; font-family: var(--font-display); font-size: 1.2rem; }
+.whatsapp-contact-card p { margin: 0 0 .35rem; color: var(--ink-soft); }
+.whatsapp-contact-card__number { display: inline-block; margin-bottom: .8rem; color: var(--purple); font-weight: 700; }
 .whatsapp-chooser__list { display: flex; flex-wrap: wrap; gap: .75rem; }
 .whatsapp-chooser__item, .whatsapp-chooser__blank, .whatsapp-popover__list a, .card__link--secondary {
   display: inline-flex; align-items: center; justify-content: center;
