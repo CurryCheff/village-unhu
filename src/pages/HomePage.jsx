@@ -11,9 +11,8 @@ import WhatsAppChooser from '../components/WhatsAppChooser';
 import WhatsAppFab from '../components/WhatsAppFab';
 import useInView from '../hooks/useInView';
 import ImageWithSkeleton from '../components/skeleton/ImageWithSkeleton';
-import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, studioCards, visitInfo, workshopList, exhibitionList, whatsappMessages } from '../content/site';
+import { contactInfo, faqItems, galleryItems, heroContent, longTableInfo, navItems, residencyContent, site, studioCards, visitInfo, workshopList, exhibitionList, whatsappMessages } from '../content/site';
 import { downloadIcsFile } from '../utils/ics';
-import { getEventStatus } from '../utils/eventStatus';
 import { buildWhatsAppLink } from '../utils/whatsapp';
 
 function formatDate(dateValue) {
@@ -22,34 +21,6 @@ function formatDate(dateValue) {
     month: 'short',
     year: 'numeric',
   });
-}
-
-function isRealValue(value) {
-  return typeof value === 'string' && value.trim().length > 0 && !value.trim().startsWith('[TODO');
-}
-
-function getSafeContactValue(value, label) {
-  if (!isRealValue(value)) {
-    if (import.meta.env.DEV) {
-      console.warn(`[Village Unhu] Missing ${label}: ${value}`);
-    }
-    return '';
-  }
-
-  return value.trim();
-}
-
-function getTelHref(value) {
-  const safeValue = getSafeContactValue(value, 'phone');
-  if (!safeValue) return '';
-  return safeValue.replace(/[\s().-]/g, '');
-}
-
-function getWhatsAppHref(value) {
-  const safeValue = getSafeContactValue(value, 'whatsapp');
-  if (!safeValue) return '';
-  const digits = safeValue.replace(/\D/g, '');
-  return digits ? `https://wa.me/${digits}` : '';
 }
 
 function GalleryItem({ item, onOpen }) {
@@ -91,7 +62,10 @@ export default function HomePage() {
   const triggerRef = useRef(null);
   const contactSectionRef = useRef(null);
   const contactVisible = useInView(contactSectionRef, { threshold: 0.35 });
-  const phoneHref = getTelHref(contactInfo.phone);
+  const phoneNumbers = contactInfo.phones.map((number) => ({
+    number,
+    href: number.replace(/[\s().-]/g, ''),
+  }));
   const whatsappHref = buildWhatsAppLink(contactInfo.whatsapp);
   const showWhatsAppFab = Boolean(whatsappHref) && !contactVisible;
 
@@ -167,7 +141,7 @@ export default function HomePage() {
       <div className="marquee" role="region" aria-label="Announcements">
         <div className="marquee__viewport">
           <ul className="marquee__track">
-            {['Residency applications open until [TODO: deadline]', 'Exhibition opening night — first Friday of December', 'Saturday clay workshops now booking', 'Studio tours every second Sunday', 'Residency applications open until [TODO: deadline]', 'Exhibition opening night — first Friday of December', 'Saturday clay workshops now booking', 'Studio tours every second Sunday'].map((item, index) => (
+            {[...site.announcements, ...site.announcements].map((item, index) => (
               <li key={`${item}-${index}`}>{item}</li>
             ))}
           </ul>
@@ -207,41 +181,32 @@ export default function HomePage() {
             <Link className="btn btn--primary" to="/apply">{heroContent.primaryCta}</Link>
             <a className="btn btn--ghost" href="#exhibitions">{heroContent.secondaryCta}</a>
           </div>
-          <div className="hero__note">
-            <span className="hero__note-mark" aria-hidden="true">✺</span>
-            <span>
-              <strong>{heroContent.note.title}</strong>
-              <br />
-              {heroContent.note.detail}
-            </span>
-          </div>
           <a className="hero__scroll" href="#studios"><span>Explore the village</span><span aria-hidden="true">↓</span></a>
         </section>
 
         <ThisWeek />
 
         <div className="pull-quote-band">
-          <p>Unhu is the Shona idea of becoming fully human through others — a village built on generosity, care and making together.</p>
+          <p>{site.pullQuote}</p>
         </div>
 
-        <section id="studios" className="section" aria-labelledby="studios-title">
+        {site.features.studios && <section id="studios" className="section" aria-labelledby="studios-title">
           <header className="section__head">
             <p className="label">01 — Studios</p>
-            <h2 id="studios-title" className="display">Rooms of one’s own, doors left open.</h2>
-            <p className="section__lede">Affordable studios for painters, sculptors, printmakers and everyone between. Shared kilns, a wood shop and a long table for lunch.</p>
+            <h2 id="studios-title" className="display">{site.studios.title}</h2>
+            <p className="section__lede">{site.studios.intro}</p>
           </header>
           <ul className="cards cards--3">
-            {studioCards.map((studio, index) => {
+            {studioCards.map((studio) => {
               const studioMessage = whatsappMessages.find((item) => item.id === 'studios')?.message || '';
               const studioLink = buildWhatsAppLink(contactInfo.whatsapp, studioMessage);
 
               return (
-                <li key={studio.id} className={`card ${index === 1 ? 'card--green' : index === 2 ? 'card--purple' : ''}`}>
+                <li key={studio.id} className="card">
                   <h3 className="card__title">{studio.title}</h3>
                   <p>{studio.summary}</p>
-                  <p className="card__price">{studio.price}</p>
                   <div className="card__links">
-                    <Link className="card__link" to={studio.topic === 'About' ? '/#about' : studio.topic === 'Workshops' ? '/#workshops' : `/?topic=${studio.topic}#contact`}>
+                    <Link className="card__link" to={`/?topic=${studio.topic}#contact`}>
                       {studio.cta} <span aria-hidden="true">→</span>
                     </Link>
                     {studioLink && (
@@ -254,14 +219,14 @@ export default function HomePage() {
               );
             })}
           </ul>
-        </section>
+        </section>}
 
-        <section id="residency" className="section section--tint" aria-labelledby="residency-title">
+        {site.features.residency && <section id="residency" className="section section--tint" aria-labelledby="residency-title">
           <div className="split">
             <header className="section__head">
               <p className="label">02 — Residency</p>
               <h2 id="residency-title" className="display">{residencyContent.title}</h2>
-              <p className="section__lede">{residencyContent.decription}</p>
+              <p className="section__lede">{residencyContent.description}</p>
               <div className="card__links">
                 <Link className="btn btn--primary" to="/apply">Explore the residency</Link>
                 {buildWhatsAppLink(contactInfo.whatsapp, whatsappMessages.find((item) => item.id === 'residency')?.message || '') && (
@@ -284,69 +249,38 @@ export default function HomePage() {
                   <dd>{detail.value}</dd>
                 </div>
               ))}
-              <div>
-                <dt>Stipend</dt>
-                <dd>{residencyContent.stipend}</dd>
-              </div>
+              {residencyContent.funding.enabled && (
+                <div>
+                  <dt>Funding</dt>
+                  <dd>{residencyContent.funding.value}</dd>
+                </div>
+              )}
             </dl>
           </div>
-        </section>
+        </section>}
 
-        <section id="exhibitions" className="section" aria-labelledby="exhibitions-title">
+        {site.features.exhibitions && <section id="exhibitions" className="section" aria-labelledby="exhibitions-title">
           <header className="section__head">
             <p className="label">03 — Exhibitions</p>
-            <h2 id="exhibitions-title" className="display">On the walls, and off them.</h2>
+            <h2 id="exhibitions-title" className="display">{site.exhibitions.title}</h2>
+            <p className="section__lede">{site.exhibitions.openingLine}</p>
           </header>
-          <ol className="shows">
-            {exhibitionList.map((show) => {
-              const status = getEventStatus(show.date);
-              const statusLabel = status === 'opening-soon' ? 'Opening soon' : status === 'past' ? 'Past' : 'Upcoming';
-              const tagClass = status === 'opening-soon' ? 'tag tag--green' : 'tag';
-              const eventMessage = `${whatsappMessages.find((item) => item.id === 'exhibitions')?.message || ''} I’m interested in ${show.title}.`;
-              const eventLink = buildWhatsAppLink(contactInfo.whatsapp, eventMessage);
-
-              return (
+          {exhibitionList.length > 0 && (
+            <ol className="shows">
+              {exhibitionList.map((show) => (
                 <li key={show.id} className="show">
                   <time className="show__date" dateTime={show.date}>{formatDate(show.date)}</time>
                   <div>
                     <h3 className="show__title">{show.title}</h3>
                     <p>{show.description}</p>
                   </div>
-                  <div className="event-actions">
-                    <span className={tagClass}>{statusLabel}</span>
-                    <button
-                      className="btn btn--ghost btn--small"
-                      type="button"
-                      onClick={() => window.location.href = `mailto:hello@villageunhu.example?subject=${encodeURIComponent(show.title + ' RSVP')}`}
-                    >
-                      RSVP
-                    </button>
-                    {eventLink && (
-                      <a className="btn btn--ghost btn--small" href={eventLink} target="_blank" rel="noopener noreferrer" aria-label={`Message us on WhatsApp about ${show.title}, opens in a new tab`}>
-                        Ask on WhatsApp
-                      </a>
-                    )}
-                    <button
-                      className="btn btn--ghost btn--small"
-                      type="button"
-                      onClick={() => downloadIcsFile({
-                        title: show.title,
-                        start: show.date,
-                        end: new Date(new Date(show.date).getTime() + 2 * 60 * 60 * 1000).toISOString(),
-                        description: show.description,
-                        location: show.venue,
-                      })}
-                    >
-                      Add to calendar
-                    </button>
-                  </div>
                 </li>
-              );
-            })}
-          </ol>
-        </section>
+              ))}
+            </ol>
+          )}
+        </section>}
 
-        <section id="workshops" className="section section--tint" aria-labelledby="workshops-title">
+        {site.features.workshops && <section id="workshops" className="section section--tint" aria-labelledby="workshops-title">
           <header className="section__head">
             <p className="label">04 — Workshops</p>
             <h2 id="workshops-title" className="display">Make something with your hands.</h2>
@@ -376,9 +310,9 @@ export default function HomePage() {
               );
             })}
           </ul>
-        </section>
+        </section>}
 
-        <section id="gallery" className="section" aria-labelledby="gallery-title">
+        {site.features.gallery && <section id="gallery" className="section" aria-labelledby="gallery-title">
           <header className="section__head">
             <p className="label">05 — Gallery</p>
             <h2 id="gallery-title" className="display">From the studios, this season.</h2>
@@ -397,21 +331,21 @@ export default function HomePage() {
               ))}
             </ul>
           </div>
-        </section>
+        </section>}
 
-        <section id="about" className="section section--tint" aria-labelledby="about-title">
+        {site.features.about && <section id="about" className="section section--tint" aria-labelledby="about-title">
           <div className="split split--about">
             <header className="section__head">
               <p className="label">06 — About</p>
-              <h2 id="about-title" className="display">Unhu: being human, together.</h2>
+              <h2 id="about-title" className="display">{site.about.title}</h2>
             </header>
             <div className="prose">
-              <p><em>Unhu</em> is a Shona word for the quality of being fully human through others. It’s the idea we build the village around.</p>
-              <p>We started as a few shared studios and a stubborn belief that art is better when it’s made in company. Today we’re a growing community of makers, teachers and neighbours who open our doors, our tools and our table.</p>
+              <p>{site.about.unhu}</p>
+              {site.about.facts.map((fact) => <p key={fact}>{fact}</p>)}
             </div>
           </div>
-          <VillageMap />
-          <div className="faq">
+          {site.features.villageMap && <VillageMap />}
+          {site.features.faq && <div className="faq">
             <p className="label">Good to know</p>
             {faqItems.map((faq) => (
               <details key={faq.question} className="faq__item">
@@ -419,10 +353,10 @@ export default function HomePage() {
                 <p>{faq.answer}</p>
               </details>
             ))}
-          </div>
-        </section>
+          </div>}
+        </section>}
 
-        <section className="section">
+        {site.features.longTable && <section className="section">
           <div className="long-table-callout">
             <div>
               <p className="label">The long table</p>
@@ -430,11 +364,10 @@ export default function HomePage() {
             </div>
             <p>{longTableInfo.description}</p>
             <div className="long-table-meta">
-              <span>Next date: {longTableInfo.nextDate}</span>
-              <Link to="/?topic=Exhibitions#contact" className="btn btn--primary">{longTableInfo.cta}</Link>
+              <Link to={longTableInfo.href} className="btn btn--primary">{longTableInfo.cta}</Link>
             </div>
           </div>
-        </section>
+        </section>}
 
         <section id="visit" className="section section--tint" aria-labelledby="visit-title">
           <header className="section__head">
@@ -442,40 +375,29 @@ export default function HomePage() {
             <h2 id="visit-title" className="display">Plan your visit.</h2>
           </header>
           <div className="visit-grid">
+            {visitInfo.locations.map((location) => (
+              <div className="visit-card" key={location.name}>
+                <h3>{location.name}</h3>
+                <address>{location.address}</address>
+                <h4>Opening hours</h4>
+                {visitInfo.hours.map((entry) => (
+                  <p key={entry.days}><strong>{entry.days}:</strong> {entry.hours}</p>
+                ))}
+              </div>
+            ))}
             <div className="visit-card">
-              <h3>Opening hours</h3>
-              <p>{visitInfo.hours}</p>
-            </div>
-            <div className="visit-card">
-              <h3>Address</h3>
-              <p>{visitInfo.address}</p>
-            </div>
-            <div className="visit-card">
-              <h3>Phone</h3>
-              {phoneHref ? <p><a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a></p> : null}
-              {whatsappHref ? <p><a href={whatsappHref} target="_blank" rel="noopener noreferrer">Message on WhatsApp</a></p> : null}
-            </div>
-            <div className="visit-card">
-              <h3>Accessibility</h3>
-              <p>{visitInfo.accessibility}</p>
-            </div>
-          </div>
-          <div className="visit-map-block">
-            <div className="visit-map-block__map" aria-label="Map placeholder">
-              <span>[TODO: replace with real map]</span>
-            </div>
-            <div className="visit-map-block__copy">
-              <p className="label">Visitor info</p>
-              <p>{visitInfo.bookingNote}</p>
+              <h3>Contact</h3>
+              {phoneNumbers.map(({ number, href }) => <p key={number}><a href={`tel:${href}`}>{number}</a></p>)}
+              <p><a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a></p>
             </div>
           </div>
         </section>
 
-        <section className="section">
+        {(site.features.team || site.features.testimonials || site.features.pastResidents) && <section className="section">
           <Team />
           <Testimonials />
           <PastResidents />
-        </section>
+        </section>}
 
         <section id="contact" ref={contactSectionRef} className="section contact" aria-labelledby="contact-title">
           <header className="section__head">
@@ -484,7 +406,8 @@ export default function HomePage() {
             <p className="section__lede">Studio enquiries, residency questions, press or a plain old hello.</p>
           </header>
           <div className="contact-meta-block">
-            {phoneHref ? <p><a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a></p> : null}
+            {phoneNumbers.map(({ number, href }) => <p key={number}><a href={`tel:${href}`}>{number}</a></p>)}
+            <p><a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a></p>
           </div>
           {whatsappHref && <WhatsAppChooser number={contactInfo.whatsapp} messages={whatsappMessages} />}
           <ContactSection />
@@ -497,19 +420,23 @@ export default function HomePage() {
             <img src="/assets/village-unhu-wordmark.png" alt="Village Unhu" width="999" height="230" />
           </Link>
           <address>
-            {visitInfo.address}
-            <br />
-            {phoneHref ? <a href={`tel:${phoneHref}`}>{getSafeContactValue(contactInfo.phone, 'phone')}</a> : null}
-            <br />
-            <a href={`mailto:${heroContent.note ? 'hello@villageunhu.example' : 'hello@villageunhu.example'}`}>hello@villageunhu.example</a>
+            {visitInfo.locations.map((location) => (
+              <React.Fragment key={location.name}>
+                <strong>{location.name}:</strong> {location.address}<br />
+              </React.Fragment>
+            ))}
+            {phoneNumbers.map(({ number, href }) => (
+              <React.Fragment key={number}><a href={`tel:${href}`}>{number}</a><br /></React.Fragment>
+            ))}
+            <a href={`mailto:${contactInfo.email}`}>{contactInfo.email}</a>
           </address>
           <div className="footer-newsletter">
-            <NewsletterForm />
+            {site.features.newsletter && <NewsletterForm />}
           </div>
           <ul className="social" aria-label="Social links">
-            <li><a href="[TODO: instagram url]">Instagram</a></li>
-            <li><a href="[TODO: facebook url]">Facebook</a></li>
-            <li><a href="[TODO: newsletter url]">Newsletter</a></li>
+            {contactInfo.socials.filter((social) => social.confirmed).map((social) => (
+              <li key={social.label}><a href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a></li>
+            ))}
             {whatsappHref ? <li><a href={whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp</a></li> : null}
           </ul>
         </div>

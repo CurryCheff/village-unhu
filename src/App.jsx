@@ -29,19 +29,15 @@ function ScrollToHash() {
 }
 
 export default function App() {
-  const contactPhone = typeof site.contact?.phone === 'string' && !site.contact.phone.trim().startsWith('[TODO')
-    ? site.contact.phone.trim()
-    : '';
-
   return (
     <>
-      {contactPhone && (
+      {site.contact.phones.length > 0 && (
         <JsonLd
           data={{
             '@context': 'https://schema.org',
             '@type': 'Organization',
             name: 'Village Unhu',
-            telephone: contactPhone,
+            telephone: site.contact.phones,
           }}
         />
       )}

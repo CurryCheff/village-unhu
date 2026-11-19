@@ -12,8 +12,8 @@ import {
 } from '../utils/spamProtection';
 import { submitToWeb3Forms } from '../utils/web3forms';
 import { validatePhone } from '../utils/validation';
+import { site } from '../content/site';
 
-const topicOptions = ['Studios', 'Residency', 'Exhibitions', 'Workshops', 'Something else'];
 const phoneRequired = false;
 const formId = 'contact';
 
@@ -53,7 +53,7 @@ export default function ContactSection() {
   const [serverError, setServerError] = useState('');
   const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
   const { values, errors, fieldProps, handleSubmit, isSubmitting, submitState, reset, setField, setSubmitState } = useForm({
-    initialValues: { name: '', email: '', phone: '', topic: 'Studios', message: '', botcheck: false, captchaToken: '' },
+    initialValues: { name: '', email: '', phone: '', topic: site.defaultContactTopic, message: '', botcheck: false, captchaToken: '' },
     validate: validateContact,
   });
 
@@ -161,17 +161,17 @@ export default function ContactSection() {
           inputMode="tel"
           {...fieldProps('phone')}
           autoComplete="tel"
-          placeholder="+263 77 123 4567"
+          placeholder="Country code and phone number"
           aria-invalid={Boolean(errors.phone)}
         />
-        <small className="field-meta">Include your country code, e.g. +263 77 123 4567</small>
+        <small className="field-meta">Include your country code.</small>
         {errors.phone && <small id="contact-phone-error" className="field-error" role="alert">{errors.phone}</small>}
       </div>
 
       <div className="field field--full">
         <label htmlFor="contact-topic">I’m writing about</label>
         <select id="contact-topic" value={values.topic} onChange={(event) => setField('topic', event.target.value)}>
-          {topicOptions.map((topic) => (
+          {site.contactTopics.map((topic) => (
             <option key={topic} value={topic}>{topic}</option>
           ))}
         </select>

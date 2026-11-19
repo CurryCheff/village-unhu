@@ -1,44 +1,22 @@
 import React from 'react';
-import weekData from '../content/thisWeek.json';
+import { site } from '../content/site';
 
 export default function ThisWeek() {
-  const { inStudio = [], inKiln = [], nextWorkshop = {} } = weekData || {};
-
-  const hasContent = inStudio.length || inKiln.length || nextWorkshop?.title || nextWorkshop?.when;
-  if (!hasContent) return null;
+  const entries = site.thisWeek.labels
+    .map((label) => site.thisWeek.items.find((item) => item.label === label))
+    .filter((item) => item && typeof item.value === 'string' && item.value.trim());
+  if (!site.features.thisWeek || !entries.length) return null;
 
   return (
-    <section className="this-week" aria-label="This week at the village">
+    <section className="this-week" aria-label="Village Unhu updates">
       <div className="this-week__inner">
-        <p className="label">This week</p>
         <div className="this-week__grid">
-          <div>
-            <h3>In the studio</h3>
-            {inStudio.length ? (
-              <ul>{inStudio.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul>
-            ) : (
-              <p>Quiet week — open studio hours remain available.</p>
-            )}
-          </div>
-          <div>
-            <h3>In the kiln</h3>
-            {inKiln.length ? (
-              <ul>{inKiln.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul>
-            ) : (
-              <p>No firings scheduled yet.</p>
-            )}
-          </div>
-          <div>
-            <h3>Next workshop</h3>
-            {nextWorkshop?.title ? (
-              <>
-                <p className="this-week__title">{nextWorkshop.title}</p>
-                <p>{nextWorkshop.when}</p>
-              </>
-            ) : (
-              <p>Check back soon for the next session.</p>
-            )}
-          </div>
+          {entries.map((item) => (
+            <div key={item.label}>
+              <h3>{item.label}</h3>
+              <p>{item.value}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

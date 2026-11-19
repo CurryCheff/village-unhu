@@ -31,9 +31,16 @@ export default function ArtistPage() {
         </div>
         <blockquote className="artist-quote">“{artist.quote}”</blockquote>
         <p>{artist.bio}</p>
-        <div className="artist-works">
-          {artist.works.length ? artist.works.map((work) => <div key={work.title} className="artist-work"><h3>{work.title}</h3><p>{work.description}</p></div>) : <div className="artist-work"><h3>Works coming soon</h3><p>[TODO: add artist work notes]</p></div>}
-        </div>
+        {artist.works.length > 0 && (
+          <div className="artist-works">
+            {artist.works.map((work) => (
+              <div key={work.title} className="artist-work">
+                <h3>{work.title}</h3>
+                <p>{work.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
         <Link className="btn btn--ghost" to="/">Back to gallery</Link>
       </section>
     </main>

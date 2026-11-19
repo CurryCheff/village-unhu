@@ -12,8 +12,7 @@ import {
 import { submitToWeb3Forms } from '../utils/web3forms';
 import { validatePhone } from '../utils/validation';
 
-const disciplineOptions = ['Visual', 'Sound', 'Performance'];
-const intakeOptions = ['[TODO: intake 1]', '[TODO: intake 2]', '[TODO: intake 3]'];
+const disciplineOptions = ['Fine art', 'Sound', 'Performance'];
 const phoneRequired = false;
 const formId = 'application';
 
@@ -41,8 +40,6 @@ function validateApplication(values) {
   if (phoneError) errors.phone = phoneError;
 
   if (!values.discipline) errors.discipline = 'Select a discipline.';
-  if (!values.intake) errors.intake = 'Choose your preferred intake.';
-
   if (!statement) errors.statement = 'Tell us about your practice.';
   else if (statement.length < 30) errors.statement = 'Please add a little more context about your practice.';
   else if (statement.length > 800) errors.statement = 'Statement must be under 800 characters.';
@@ -66,7 +63,6 @@ async function submitApplication(values) {
     ...(values.phone?.trim() ? { phone: values.phone.trim() } : {}),
     country: values.country,
     discipline: values.discipline,
-    intake: values.intake,
     statement: values.statement,
     portfolio_link: values.portfolioLink || '',
     'h-captcha-response': values.captchaToken,
@@ -84,7 +80,6 @@ export default function ApplyForm() {
       phone: '',
       country: '',
       discipline: '',
-      intake: '',
       statement: '',
       portfolioLink: '',
       botcheck: false,
@@ -172,7 +167,7 @@ export default function ApplyForm() {
 
       <div className="field">
         <label htmlFor="email">Email</label>
-        <input id="email" type="email" {...fieldProps('email')} placeholder="you@example.com" />
+        <input id="email" type="email" {...fieldProps('email')} placeholder="Email address" />
         {errors.email && <small id="email-error" className="field-error" role="alert">{errors.email}</small>}
       </div>
 
@@ -184,10 +179,10 @@ export default function ApplyForm() {
           inputMode="tel"
           {...fieldProps('phone')}
           autoComplete="tel"
-          placeholder="+263 77 123 4567"
+          placeholder="Country code and phone number"
           aria-invalid={Boolean(errors.phone)}
         />
-        <small className="field-meta">Include your country code, e.g. +263 77 123 4567</small>
+        <small className="field-meta">Include your country code.</small>
         {errors.phone && <small id="application-phone-error" className="field-error" role="alert">{errors.phone}</small>}
       </div>
 
@@ -208,17 +203,6 @@ export default function ApplyForm() {
         {errors.discipline && <small id="discipline-error" className="field-error" role="alert">{errors.discipline}</small>}
       </div>
 
-      <div className="field">
-        <label htmlFor="intake">Preferred intake</label>
-        <select id="intake" {...fieldProps('intake')}>
-          <option value="">Select an intake</option>
-          {intakeOptions.map((option) => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
-        {errors.intake && <small id="intake-error" className="field-error" role="alert">{errors.intake}</small>}
-      </div>
-
       <div className="field field--full">
         <label htmlFor="statement">Statement</label>
         <textarea id="statement" rows="6" {...fieldProps('statement')} placeholder="Tell us about your practice and why this residency feels relevant." />
@@ -230,7 +214,7 @@ export default function ApplyForm() {
 
       <div className="field field--full">
         <label htmlFor="portfolioLink">Portfolio link</label>
-        <input id="portfolioLink" type="url" {...fieldProps('portfolioLink')} placeholder="https://your-portfolio.com" />
+        <input id="portfolioLink" type="url" {...fieldProps('portfolioLink')} placeholder="Portfolio URL" />
         <small className="field-meta">Share a link to your portfolio, Google Drive, Dropbox or website.</small>
         {errors.portfolioLink && <small id="portfolioLink-error" className="field-error" role="alert">{errors.portfolioLink}</small>}
       </div>

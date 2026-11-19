@@ -116,7 +116,7 @@ export default function NewsletterForm() {
 
       <label htmlFor="newsletter-email">Newsletter</label>
       <div className="newsletter-row">
-        <input id="newsletter-email" type="email" {...fieldProps('email')} placeholder="name@example.com" aria-invalid={Boolean(errors.email)} />
+        <input id="newsletter-email" type="email" {...fieldProps('email')} placeholder="Email address" aria-invalid={Boolean(errors.email)} />
         <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
           {isSubmitting ? 'Sending…' : 'Join'}
         </button>

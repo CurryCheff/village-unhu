@@ -1,360 +1,196 @@
 export const site = {
+  features: {
+    studios: true,
+    residency: true,
+    exhibitions: true,
+    workshops: false,
+    gallery: false,
+    about: true,
+    villageMap: false,
+    faq: false,
+    longTable: true,
+    accessibility: false,
+    newsletter: true,
+    team: false,
+    testimonials: false,
+    pastResidents: false,
+    thisWeek: false,
+  },
+  pendingContent: {
+    studioFee: false,
+    residencyFunding: false,
+    exhibitionOpeningTime: false,
+    workshopDaysTimesAndFees: false,
+    longTableDateTimeAndCost: false,
+    faqAnswers: false,
+    galleryArtworkDetails: false,
+    founderPermission: false,
+    instagramHandle: false,
+    accessibilityDetails: false,
+    mountainsDescription: false,
+    coffeeShopDescription: false,
+    whatsappContacts: false,
+  },
   nav: [
     { label: 'Studios', href: '#studios' },
     { label: 'Residency', href: '#residency' },
     { label: 'Exhibitions', href: '#exhibitions' },
-    { label: 'Workshops', href: '#workshops' },
-    { label: 'Gallery', href: '#gallery' },
     { label: 'About', href: '#about' },
     { label: 'Contact', href: '#contact', cta: true },
   ],
   hero: {
     eyebrow: 'Contemporary art village',
     title: 'Art that grows from shared ground.',
-    subtitle:
-      'Village Unhu is a studio, residency and exhibition space where artists, neighbours and curious people make work side by side. Come for a show. Stay for the soil.',
+    subtitle: 'Village Unhu is an artist-led project space in Zimbabwe, registered since 2009.',
     primaryCta: 'Apply for residency',
-    secondaryCta: 'See what\'s on',
-    note: {
-      title: 'Growing season 2026',
-      detail: 'Studios, shared tables and soft ground.',
-    },
+    secondaryCta: "See what's on",
   },
+  announcements: [
+    'Studio tours at the end of every residency',
+    'Exhibition openings every Thursday',
+    'Residency applications open all year round',
+  ],
   pullQuote:
     'Unhu is the Shona idea of becoming fully human through others — a village built on generosity, care and making together.',
-  studios: [
-    {
-      id: 'open-studios',
-      title: 'Open studios',
-      summary: 'Light-filled workspaces on monthly terms, with 24-hour access and storage.',
-      price: '[TODO: monthly studio fee]',
-      cta: 'Get studio details',
-      topic: 'Studios',
-    },
-    {
-      id: 'print-clay',
-      title: 'Print & clay',
-      summary: 'A shared press room and two kilns, with technician help on set days.',
-      price: '[TODO: shared room fee]',
-      cta: 'Book a session',
-      topic: 'Workshops',
-    },
-    {
-      id: 'long-table',
-      title: 'The long table',
-      summary: 'A communal kitchen and critique space where the best ideas tend to show up uninvited.',
-      price: '[TODO: community membership]',
-      cta: 'Meet the village',
-      topic: 'About',
-    },
-  ],
-  residency: {
-    title: 'Four weeks to get lost on purpose.',
-    decription:
-      'Our residency gives local and international artists time, space, a stipend and a community to push against. No required outcome — only an open studio at the end.',
-    details: [
-      { label: 'Length', value: '4 weeks, three intakes a year' },
-      { label: 'Includes', value: 'Studio, accommodation, meals, stipend' },
-      { label: 'Open to', value: 'Visual, sound and performance artists' },
-      { label: 'Deadline', value: '[TODO: next deadline]' },
+  studios: {
+    title: 'Studios',
+    intro: 'Village Unhu started as a studio space.',
+    cards: [
+      {
+        id: 'open-studios',
+        title: 'Studio space',
+        summary: 'Village Unhu started as a studio space.',
+        cta: 'Get in touch',
+        topic: 'Studios',
+      },
     ],
-    stipend: '[TODO: stipend amount]',
-    intakeDates: ['[TODO: intake 1 date]', '[TODO: intake 2 date]', '[TODO: intake 3 date]'],
-    selectionProcess: '[TODO: selection process summary]',
-    submission: ['[TODO: portfolio link]', '[TODO: statement max 500 words]', '[TODO: up to 10 images or audio/video links]'],
+  },
+  residency: {
+    title: 'Residency at Mutare',
+    description:
+      'The residency takes place at the Mutare space. It runs from two weeks to six months, with five intakes a year and applications open all year round.',
+    details: [
+      { label: 'Location', value: 'Mutare' },
+      { label: 'Length', value: 'Two weeks to six months' },
+      { label: 'Intakes', value: 'Five a year' },
+      { label: 'Applications', value: 'Open all year round' },
+      { label: 'Includes', value: 'Studio and accommodation' },
+      { label: 'Open to', value: 'Fine art, sound and performance artists' },
+    ],
+    funding: { enabled: false, value: '' },
     applyLabel: 'Apply for residency',
   },
-  exhibitions: [
-    {
-      id: 'soft-ground',
-      title: 'Soft Ground',
-      date: '2026-12-04',
-      description: 'Group show on soil, textile and memory. Opening night with live music.',
-      venue: '[TODO: venue name]',
-      status: 'opening-soon',
-      rsvp: 'RSVP for opening night',
-    },
-    {
-      id: 'what-the-river-carried',
-      title: 'What the River Carried',
-      date: '2027-01-22',
-      description: 'New sculpture and sound from the autumn residents.',
-      venue: '[TODO: venue name]',
-      status: 'upcoming',
-      rsvp: 'Join the preview list',
-    },
-  ],
-  workshops: [
-    {
-      id: 'clay-basics',
-      title: 'Clay basics',
-      schedule: 'Saturdays · 10:00',
-      summary: 'Pinch, coil and slab your first pieces.',
-      price: '[TODO: workshop fee]',
-      date: '2026-11-02',
-      location: '[TODO: workshop room]',
-      tags: ['Beginner-friendly'],
-    },
-    {
-      id: 'print-night',
-      title: 'Print night',
-      schedule: 'Wednesdays · 17:30',
-      summary: 'Lino cuts and small-edition printing.',
-      price: '[TODO: workshop fee]',
-      date: '2026-11-05',
-      location: '[TODO: print room]',
-      tags: ['Materials included'],
-    },
-  ],
-  gallery: [
-    {
-      id: 'art-1',
-      title: 'Untitled (Ground I)',
-      artist: '[TODO: artist name]',
-      year: '2026',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-2',
-      title: 'Doorway',
-      artist: '[TODO: artist name]',
-      year: '2026',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-3',
-      title: 'Sun, Slowly',
-      artist: '[TODO: artist name]',
-      year: '2025',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-4',
-      title: 'Two Fields',
-      artist: '[TODO: artist name]',
-      year: '2026',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-5',
-      title: 'Window Seed',
-      artist: '[TODO: artist name]',
-      year: '2026',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-6',
-      title: 'Gathering',
-      artist: '[TODO: artist name]',
-      year: '2025',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-7',
-      title: 'Horizon Tea',
-      artist: '[TODO: artist name]',
-      year: '2026',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-    {
-      id: 'art-8',
-      title: 'Small Orbit',
-      artist: '[TODO: artist name]',
-      year: '2026',
-      image: '',
-      description: '[TODO: brief work note]',
-    },
-  ],
-  artists: [
-    {
-      slug: 'artist-name',
-      name: '[TODO: artist name]',
-      discipline: '[TODO: discipline]',
-      bio: '[TODO: artist bio]',
-      quote: '[TODO: short artist quote]',
-      works: [],
-    },
-  ],
-  faq: [
-    {
-      question: 'Can I visit without booking?',
-      answer: 'Yes. [TODO: talk through visiting hours and what to expect].',
-    },
-    {
-      question: 'Do I need experience for a workshop?',
-      answer: 'Not at all. [TODO: add beginner info].',
-    },
-    {
-      question: 'Who can apply for the residency?',
-      answer: 'We welcome visual, sound and performance artists. [TODO: add application notes].',
-    },
-  ],
-  visit: {
-    address: '[TODO: street address]',
-    hours: '[TODO: opening hours]',
-    transport: '[TODO: how to get here]',
-    accessibility: '[TODO: accessibility details]',
-    bookingNote: 'Yes. [TODO: explain visiting without booking].',
-    map: '[TODO: map placeholder]',
+  exhibitions: {
+    title: 'Exhibitions',
+    openingLine: 'Exhibition openings every Thursday.',
+    items: [],
   },
+  workshops: [],
+  gallery: {
+    categories: ['Paintings', 'Drawings', 'Graphics', 'Multimedia', 'Photographs', 'Sculpture'],
+    items: [],
+  },
+  about: {
+    title: 'Unhu: being human, together.',
+    unhu:
+      'Unhu is the Shona idea of becoming fully human through others — a village built on generosity, care and making together.',
+    facts: [
+      'Village Unhu is an artist-led project space in Zimbabwe, registered since 2009.',
+      'It started as a studio space.',
+    ],
+    founders: { confirmed: false, names: [] },
+    exchanges: ['UK', 'Glasgow', 'Turkey', 'France', 'South Africa', 'Namibia', 'Mauritius', 'Switzerland'],
+    artFairs: [
+      { name: 'FNB Joburg Art Fair', since: '2015' },
+      { name: 'Investec Cape Town Art Fair', since: '2017' },
+      { name: '1:54 London', year: '2016' },
+      { name: 'Armory Show', year: '2016' },
+      { name: 'RMB Latitude Online', year: '2024' },
+    ],
+    schoolProgrammes:
+      'Artists give art lessons and mini art camps in schools, and schools visit the space.',
+  },
+  faq: [],
+  locations: [
+    { name: 'Harare', address: '1 Rowland Square, Milton Park' },
+    { name: 'Mutare', address: '999 Mount Wolseley / Drifters, Mutare Road' },
+  ],
+  hours: [
+    { days: 'Monday', hours: 'By appointment only' },
+    { days: 'Tuesday to Friday', hours: '9am to 5pm' },
+    { days: 'Saturday', hours: '9am to 12:00' },
+    { days: 'Sunday', hours: 'Closed' },
+    { days: 'Public holidays', hours: 'Closed' },
+  ],
   contact: {
-    email: '[TODO: real email]',
-    phone: '+263 77 366 3475',
-    whatsapp: '263773663475',
-    social: 'Instagram / Facebook / Newsletter',
+    email: 'villageunhu@gmail.com',
+    phones: ['+263 774 630 656', '+263 772 751 455'],
+    // Temporary WhatsApp default until the owner confirms the contacts.
+    whatsappDefaultNumber: '263772751455',
+    socials: [
+      {
+        label: 'Facebook',
+        href: 'https://www.facebook.com/villageunhu.villageunhu',
+        confirmed: true,
+      },
+      { label: 'Instagram', href: '', confirmed: false },
+    ],
   },
+  contactTopics: ['Studios', 'Residency', 'Exhibitions', 'Something else'],
+  defaultContactTopic: 'Studios',
   whatsappMessages: [
     {
       id: 'studios',
       label: 'Studio space',
-      message: 'Hi Village Unhu, I\'m interested in renting a studio. Could you tell me about availability and monthly rates?',
+      message: 'Hi Village Unhu, I would like to ask about the studio space.',
     },
     {
       id: 'residency',
       label: 'Residency',
-      message: 'Hi Village Unhu, I\'d like to know more about the residency programme, including dates, the stipend and how to apply.',
-    },
-    {
-      id: 'workshops',
-      label: 'Workshops',
-      message: 'Hi Village Unhu, I\'d like to book a place in a workshop. Which sessions have space?',
-    },
-    {
-      id: 'group',
-      label: 'Group or school visit',
-      message: 'Hi Village Unhu, I\'d like to arrange a group session for [number] people. What dates and prices do you offer?',
-    },
-    {
-      id: 'visit',
-      label: 'Visiting',
-      message: 'Hi Village Unhu, I\'d like to visit. What are your opening hours and do I need to book?',
+      message: 'Hi Village Unhu, I would like to ask about the residency.',
     },
     {
       id: 'exhibitions',
-      label: 'Exhibitions and events',
-      message: 'Hi Village Unhu, I\'d like to know about upcoming exhibitions and how to RSVP.',
+      label: 'Exhibitions',
+      message: 'Hi Village Unhu, I would like to ask about exhibitions.',
     },
     {
       id: 'general',
-      label: 'Just saying hello',
-      message: 'Hi Village Unhu, I found you through your website and wanted to get in touch.',
+      label: 'General enquiry',
+      message: 'Hi Village Unhu, I would like to get in touch.',
     },
   ],
-  socials: [
-    { label: 'Instagram', href: '[TODO: instagram url]' },
-    { label: 'Facebook', href: '[TODO: facebook url]' },
-    { label: 'Newsletter', href: '[TODO: newsletter url]' },
-  ],
-  supportOptions: [
-    { label: 'Sponsor a table', description: '[TODO: support description]' },
-    { label: 'Fund a workshop', description: '[TODO: support description]' },
-    { label: 'Patron membership', description: '[TODO: support description]' },
-  ],
-  team: [
-    {
-      name: '[TODO: team member name]',
-      role: '[TODO: role]',
-      bio: '[TODO: short bio]',
-      initials: 'VU',
-    },
-    {
-      name: '[TODO: team member name]',
-      role: '[TODO: role]',
-      bio: '[TODO: short bio]',
-      initials: 'VU',
-    },
-  ],
-  testimonials: [
-    { quote: '[TODO: real testimonial not yet available]', name: '[TODO: name]' },
-  ],
-  pastResidents: [
-    { name: '[TODO: resident name]', project: '[TODO: project title]' },
-  ],
-  thisWeek: {
-    inStudio: ['[TODO: artist name]'],
-    inKiln: ['[TODO: firing description]'],
-    nextWorkshop: {
-      title: '[TODO: workshop title]',
-      when: '[TODO: date/time]',
-    },
-  },
   longTable: {
-    title: 'Sit at the long table',
-    description: 'A monthly shared meal where neighbours, artists and curious people gather around the same table to share food, stories and questions.',
-    nextDate: '[TODO: next long table date]',
-    cta: 'RSVP to the table',
+    title: 'The long table',
+    description: 'The long table is a monthly gathering.',
+    cta: 'Get in touch',
+    href: '/?topic=Something%20else#contact',
   },
-  todoList: [
-    '[TODO: street address]',
-    '[TODO: real email]',
-    '[TODO: opening hours]',
-    '[TODO: monthly studio fee]',
-    '[TODO: shared room fee]',
-    '[TODO: community membership]',
-    '[TODO: stipend amount]',
-    '[TODO: next deadline]',
-    '[TODO: intake 1 date]',
-    '[TODO: intake 2 date]',
-    '[TODO: intake 3 date]',
-    '[TODO: selection process summary]',
-    '[TODO: portfolio link]',
-    '[TODO: statement max 500 words]',
-    '[TODO: up to 10 images or audio/video links]',
-    '[TODO: venue name]',
-    '[TODO: workshop fee]',
-    '[TODO: workshop room]',
-    '[TODO: print room]',
-    '[TODO: artist name]',
-    '[TODO: brief work note]',
-    '[TODO: discipline]',
-    '[TODO: artist bio]',
-    '[TODO: short artist quote]',
-    '[TODO: map placeholder]',
-    '[TODO: phone number]',
-    '[TODO: WhatsApp number, digits only with country code]',
-    '[TODO: instagram url]',
-    '[TODO: facebook url]',
-    '[TODO: newsletter url]',
-    '[TODO: support description]',
-    '[TODO: team member name]',
-    '[TODO: role]',
-    '[TODO: short bio]',
-    '[TODO: real testimonial not yet available]',
-    '[TODO: resident name]',
-    '[TODO: project title]',
-    '[TODO: artist name]',
-    '[TODO: workshop title]',
-    '[TODO: date/time]',
-    '[TODO: next long table date]',
-    '[TODO: explain visiting without booking]',
-    '[TODO: how to get here]',
-    '[TODO: accessibility details]',
-    '[TODO: real email]',
-  ],
+  thisWeek: {
+    labels: ['Artwork of the week', 'Artist of the month', 'Artists in residency'],
+    items: [],
+  },
+  futureProjects: { enabled: false, items: [] },
 };
 
 export const navItems = site.nav;
 export const heroContent = site.hero;
-export const studioCards = site.studios;
+export const studioCards = site.studios.cards;
 export const residencyContent = site.residency;
-export const exhibitionList = site.exhibitions;
+export const exhibitionList = site.exhibitions.items;
 export const workshopList = site.workshops;
-export const galleryItems = site.gallery;
+export const galleryItems = site.gallery.items;
 export const faqItems = site.faq;
-export const visitInfo = site.visit;
-export const teamMembers = site.team;
-export const testimonialList = site.testimonials;
-export const supportOptions = site.supportOptions;
-export const artistList = site.artists;
+export const visitInfo = { locations: site.locations, hours: site.hours };
+export const teamMembers = [];
+export const testimonialList = [];
+export const supportOptions = [];
+export const artistList = [];
 export const longTableInfo = site.longTable;
-export const contactInfo = site.contact;
+export const contactInfo = {
+  ...site.contact,
+  whatsapp: site.contact.whatsappDefaultNumber,
+};
 export const whatsappMessages = site.whatsappMessages;
 
 export default site;
