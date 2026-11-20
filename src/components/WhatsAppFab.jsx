@@ -18,6 +18,70 @@ export default function WhatsAppFab({ contacts = [], defaultContactId, messages 
   const defaultLink = defaultContact ? buildWhatsAppLink(defaultContact.number) : null;
 
   useEffect(() => {
+    let frame = 0;
+
+    const checkObstruction = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const button = buttonRef.current;
+        const isMobile = window.matchMedia(
+          '(max-width: 36rem), (max-width: 56rem) and (max-height: 30rem)'
+        ).matches;
+        if (!button) return;
+        if (!isMobile) {
+          button.classList.remove('is-obscured');
+          return;
+        }
+
+        const bounds = button.getBoundingClientRect();
+        const overlaps = (rect) => (
+          rect.left < bounds.right
+          && rect.right > bounds.left
+          && rect.top < bounds.bottom
+          && rect.bottom > bounds.top
+        );
+        const controls = Array.from(document.querySelectorAll(
+          'button:not(.whatsapp-fab), a[href], input, textarea, select'
+        ));
+        const controlOverlap = controls.some((element) => {
+          if (element.closest('.whatsapp-fab__popover')) return false;
+          const rect = element.getBoundingClientRect();
+          return rect.bottom > 0 && rect.top < window.innerHeight && overlaps(rect);
+        });
+        const cardTextOverlap = Array.from(document.querySelectorAll(
+          '.card__title, .card__meta, .card p'
+        )).some((element) => {
+          const elementRect = element.getBoundingClientRect();
+          if (
+            elementRect.right <= bounds.left
+            || elementRect.left >= bounds.right
+            || elementRect.bottom <= bounds.top
+            || elementRect.top >= bounds.bottom
+          ) return false;
+          const range = document.createRange();
+          range.selectNodeContents(element);
+          return Array.from(range.getClientRects()).some((rect) => overlaps(rect));
+        });
+
+        button.classList.toggle('is-obscured', controlOverlap || cardTextOverlap);
+      });
+    };
+
+    checkObstruction();
+    window.addEventListener('scroll', checkObstruction, { passive: true });
+    window.addEventListener('resize', checkObstruction);
+    const resizeObserver = new ResizeObserver(checkObstruction);
+    resizeObserver.observe(document.body);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', checkObstruction);
+      window.removeEventListener('resize', checkObstruction);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     if (!open) return undefined;
 
     const handlePointerDown = (event) => {

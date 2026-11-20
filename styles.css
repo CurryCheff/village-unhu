@@ -1054,28 +1054,75 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 }
 
 @media (max-width: 36rem) {
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
+  html { scroll-padding-top: calc(3.25rem + env(safe-area-inset-top, 0px)); }
   .marquee__track {
     gap: 1.25rem;
     padding: .55rem 1rem;
     font-size: .65rem;
   }
   .site-header {
+    order: -1;
     gap: .75rem;
-    padding: .7rem .9rem;
+    padding: calc(.25rem + env(safe-area-inset-top, 0px)) .9rem .25rem;
+    background: var(--bg);
+    backdrop-filter: none;
   }
-  .brand--wordmark { width: 9rem; }
+  .brand--wordmark { width: 8.25rem; }
   .nav-toggle {
-    padding: .5rem .85rem;
+    min-width: 44px;
+    min-height: 44px;
+    padding: .35rem .7rem;
     font-size: .95rem;
   }
   .cards--4 { grid-template-columns: 1fr; }
   .form { grid-template-columns: 1fr; }
   .facts div { grid-template-columns: 1fr; gap: .2rem; }
   .btn { width: 100%; }
-  .hero__blob--purple { right: 4vw; bottom: 3%; }
-  .hero__blob--green { width: clamp(10rem, 50vw, 14rem); right: -10vw; top: 1.5rem; }
+  .hero { isolation: isolate; }
+  .hero__blob { z-index: 0; pointer-events: none; }
+  .hero > :not(.hero__blob) { position: relative; z-index: 1; }
+  .hero__blob--purple { display: none; }
+  .hero__blob--green {
+    width: clamp(8rem, 38vw, 10rem);
+    right: -6rem;
+    top: -4rem;
+  }
   .gallery-carousel__controls p { display: none; }
   .gallery-carousel__controls { justify-content: flex-end; }
   .section, .hero, .site-footer { padding-inline: 1rem; }
   .hero__actions .btn { width: 100%; }
+}
+
+@media (max-width: 56rem) and (max-height: 30rem) and (min-width: 36.01rem) {
+  #root { display: flex; flex-direction: column; }
+  html { scroll-padding-top: calc(3.25rem + env(safe-area-inset-top, 0px)); }
+  .site-header {
+    order: -1;
+    gap: .75rem;
+    padding: calc(.25rem + env(safe-area-inset-top, 0px)) .9rem .25rem;
+    background: var(--bg);
+    backdrop-filter: none;
+  }
+  .brand--wordmark { width: 8.25rem; }
+  .nav-toggle { min-width: 44px; min-height: 44px; padding: .35rem .7rem; }
+  .hero { isolation: isolate; }
+  .hero__blob { z-index: 0; pointer-events: none; }
+  .hero > :not(.hero__blob) { position: relative; z-index: 1; }
+  .hero__blob--purple { display: none; }
+  .hero__blob--green {
+    width: clamp(8rem, 38vw, 10rem);
+    right: -6rem;
+    top: -4rem;
+  }
+}
+
+@media (max-width: 36rem), (max-width: 56rem) and (max-height: 30rem) {
+  .whatsapp-fab.is-obscured {
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
