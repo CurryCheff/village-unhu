@@ -1058,18 +1058,28 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
     display: flex;
     flex-direction: column;
   }
-  html { scroll-padding-top: calc(3.25rem + env(safe-area-inset-top, 0px)); }
+  html { scroll-padding-top: calc(3.0625rem + env(safe-area-inset-top, 0px)); }
   .marquee__track {
     gap: 1.25rem;
     padding: .55rem 1rem;
     font-size: .65rem;
   }
   .site-header {
+    top: 0;
     order: -1;
     gap: .75rem;
-    padding: calc(.25rem + env(safe-area-inset-top, 0px)) .9rem .25rem;
+    padding: env(safe-area-inset-top, 0px) .9rem .25rem;
     background: var(--bg);
     backdrop-filter: none;
+  }
+  .site-header::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset-inline: 0;
+    top: calc(-1 * env(safe-area-inset-top, 0px));
+    height: env(safe-area-inset-top, 0px);
+    background: var(--bg);
   }
   .brand--wordmark { width: 8.25rem; }
   .nav-toggle {
@@ -1099,13 +1109,23 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
 
 @media (max-width: 56rem) and (max-height: 30rem) and (min-width: 36.01rem) {
   #root { display: flex; flex-direction: column; }
-  html { scroll-padding-top: calc(3.25rem + env(safe-area-inset-top, 0px)); }
+  html { scroll-padding-top: calc(3.0625rem + env(safe-area-inset-top, 0px)); }
   .site-header {
+    top: 0;
     order: -1;
     gap: .75rem;
-    padding: calc(.25rem + env(safe-area-inset-top, 0px)) .9rem .25rem;
+    padding: env(safe-area-inset-top, 0px) .9rem .25rem;
     background: var(--bg);
     backdrop-filter: none;
+  }
+  .site-header::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset-inline: 0;
+    top: calc(-1 * env(safe-area-inset-top, 0px));
+    height: env(safe-area-inset-top, 0px);
+    background: var(--bg);
   }
   .brand--wordmark { width: 8.25rem; }
   .nav-toggle { min-width: 44px; min-height: 44px; padding: .35rem .7rem; }
@@ -1125,4 +1145,13 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { border-color
     visibility: hidden;
     pointer-events: none;
   }
+}
+
+@media (max-width: 30rem) {
+  .visit-grid { grid-template-columns: 1fr; }
+  .visit-card:last-child a[href^="tel:"] {
+    white-space: nowrap;
+    font-size: clamp(.9rem, 3.8vw, 1rem);
+  }
+  .visit-card:last-child a[href^="mailto:"] { overflow-wrap: anywhere; }
 }
