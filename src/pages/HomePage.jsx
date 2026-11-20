@@ -57,6 +57,8 @@ export default function HomePage() {
   const location = useLocation();
   const [activeArt, setActiveArt] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const headerRef = useRef(null);
   const galleryRef = useRef(null);
   const triggerRef = useRef(null);
   const contactSectionRef = useRef(null);
@@ -67,6 +69,49 @@ export default function HomePage() {
   }));
   const whatsappHref = buildWhatsAppLink(contactInfo.whatsapp);
   const showWhatsAppFab = Boolean(whatsappHref) && !contactVisible;
+
+  useEffect(() => {
+    let frame = 0;
+    let thresholdY = window.scrollY;
+
+    const updateHeader = () => {
+      frame = 0;
+      const currentY = window.scrollY;
+      const keepVisible = !window.matchMedia('(max-width: 767px)').matches
+        || menuOpen
+        || headerRef.current?.contains(document.activeElement)
+        || currentY <= 80;
+
+      if (keepVisible) {
+        setHeaderHidden(false);
+        thresholdY = currentY;
+        return;
+      }
+
+      if (Math.abs(currentY - thresholdY) >= 8) {
+        setHeaderHidden(currentY > thresholdY);
+        thresholdY = currentY;
+      }
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateHeader);
+    };
+    const onResize = () => {
+      thresholdY = window.scrollY;
+      updateHeader();
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    updateHeader();
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     if (location.hash === '#contact') {
@@ -137,6 +182,7 @@ export default function HomePage() {
 
   return (
     <>
+      <div className="safe-area-strip" aria-hidden="true" />
       <div className="marquee" role="region" aria-label="Announcements">
         <div className="marquee__viewport">
           <ul className="marquee__track">
@@ -147,7 +193,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <header className="site-header">
+      <header ref={headerRef} className={`site-header${headerHidden && !menuOpen ? ' is-hidden' : ''}`}>
         <Link className="brand brand--wordmark" to="/" aria-label="Village Unhu — home">
           <img src="/assets/village-unhu-wordmark.png" alt="Village Unhu" width="999" height="230" />
         </Link>
